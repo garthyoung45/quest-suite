@@ -75,6 +75,7 @@ export class App {
     this.renderer.setSize(innerWidth, innerHeight);
     this.renderer.xr.enabled = true;
     this.renderer.xr.setReferenceSpaceType('local-floor');
+    this.renderer.xr.setFoveation(1); // Quest 2: full fixed foveation, edges render cheaper
     document.body.appendChild(this.renderer.domElement);
     this.scene.background = new THREE.Color(opts.sky ?? 0x06070d);
     this.scene.add(this.rig);
@@ -157,7 +158,7 @@ export class App {
         <button id="go-flat" style="${BTN_CSS};background:#232a44;color:#eef2ff">Play on screen</button>
       </div>
       <p style="margin:0 0 6px"><b>Quest hands:</b> ${o.handsHelp}</p>
-      <p style="margin:0 0 6px"><b>PS5 controller:</b> ${o.padHelp}</p>
+      <p style="margin:0 0 6px"><b>PS5 or Switch Pro controller:</b> ${o.padHelp}</p>
       <p style="margin:0;color:#8b95b8;font-size:14px">On screen: left stick or WASD walks, right stick or arrow keys looks, R2 or Space is your right-hand pinch, L2 or Shift the left, D-pad up/down (T/G) reaches further or nearer. Click the view to look with the mouse.</p>
       <p id="xr-note" style="color:#ffb86b;font-size:14px"></p></div>`;
     document.body.appendChild(ov);

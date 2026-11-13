@@ -2,7 +2,7 @@
 if (import.meta.env.DEV && new URLSearchParams(location.search).has('emu')) {
   const { XRDevice, metaQuest3 } = await import('iwer');
   const d = new XRDevice(metaQuest3);
-  d.installRuntime();
+  d.installRuntime({ forceInstall: true });
   d.primaryInputMode = 'hand';
   (window as any).__xr = d;
 }
