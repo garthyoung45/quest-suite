@@ -7,6 +7,7 @@ const app = new App({
   mode: 'ar',
   handsHelp: 'reach out slowly and pinch a firefly. Either hand.',
   padHelp: 'walk to a firefly and press R2 or L2 when your hand is on it.',
+  steps: ['Lights drift around your room', 'Reach slowly to one and pull the trigger to catch it', 'You have one minute'],
 });
 
 const COUNT = 14;

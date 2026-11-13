@@ -7,6 +7,7 @@ const app = new App({
   mode: 'ar',
   handsHelp: 'pinch the green PASS or red FAIL button under each tag.',
   padHelp: 'walk up to a tag, put your hand on PASS or FAIL, press R2.',
+  steps: ['Tags hang all around you. Read one', 'Touch green PASS or red FAIL under it', 'Pull the trigger to answer. Four of eight are bad'],
 });
 
 const TODAY = new Date(2026, 10, 13);

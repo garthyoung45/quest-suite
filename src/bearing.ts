@@ -7,6 +7,7 @@ const app = new App({
   mode: 'vr',
   handsHelp: 'walk to a motor, put your ear near it, then pinch its top to tag it.',
   padHelp: 'walk up to a motor and press R2 with your hand on it.',
+  steps: ['Walk up to each motor and listen close', 'One sounds wrong: ticking, rattle, wobble or squeal', 'Reach over the bad motor and pull the trigger'],
   sky: 0x0a0d14,
 });
 

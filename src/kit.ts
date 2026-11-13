@@ -22,6 +22,7 @@ export interface AppOptions {
   mode: Mode;
   handsHelp: string;
   padHelp: string;
+  steps: string[]; // in-headset how-to, controller first, 2 or 3 short lines
   sky?: number;
   eye?: number; // flat-mode eye height
 }
@@ -47,6 +48,7 @@ export class App {
   inXR = false;
   passthrough = false;
   time = 0;
+  private time0 = 0;
   opts: AppOptions;
   room = new THREE.Group();
   /** Real surfaces the headset knows about (Quest 3 room setup). Empty elsewhere. */
@@ -60,6 +62,8 @@ export class App {
   private hudEl: HTMLDivElement;
   private hudMesh: THREE.Mesh;
   private hudText = '';
+  private howTo!: THREE.Mesh;
+  private howToPlaced = false;
   private xrSelect = [false, false];
   private xrHands: THREE.Group[] = [];
   private xrCtrl: THREE.Group[] = [];
@@ -116,6 +120,11 @@ export class App {
     this.hudEl = document.createElement('div');
     this.hudEl.style.cssText = 'position:fixed;left:50%;bottom:22px;transform:translateX(-50%);max-width:92vw;padding:10px 16px;border-radius:12px;background:rgba(8,10,18,.72);color:#eef2ff;font:600 17px system-ui;text-align:center;white-space:pre-line;pointer-events:none;display:none';
     document.body.appendChild(this.hudEl);
+    this.howTo = makeHowTo(opts.title, opts.steps);
+    this.howTo.visible = false;
+    this.howTo.renderOrder = 20;
+    (this.howTo.material as THREE.MeshBasicMaterial).depthTest = false;
+    this.scene.add(this.howTo);
     this.hudMesh = makeLabel('', 0.62, 0.2);
     this.hudMesh.visible = false;
     this.scene.add(this.hudMesh);
@@ -141,8 +150,8 @@ export class App {
     });
     el.addEventListener('contextmenu', (e) => e.preventDefault());
     el.addEventListener('wheel', (e) => { this.reach = clamp(this.reach - e.deltaY * 0.0006, 0.2, 1.6); });
-    this.renderer.xr.addEventListener('sessionstart', () => { this.inXR = true; this.room.visible = !this.passthrough; this.rig.position.set(0, 0, 0); this.camera.position.set(0, 0, 0); });
-    this.renderer.xr.addEventListener('sessionend', () => { this.inXR = false; this.room.visible = true; this.passthrough = false; this.scene.background = new THREE.Color(this.opts.sky ?? 0x06070d); this.camera.position.set(0, this.opts.eye ?? 1.6, 0); });
+    this.renderer.xr.addEventListener('sessionstart', () => { this.inXR = true; this.howTo.visible = true; this.howToPlaced = false; this.room.visible = !this.passthrough; this.rig.position.set(0, 0, 0); this.camera.position.set(0, 0, 0); });
+    this.renderer.xr.addEventListener('sessionend', () => { this.inXR = false; this.howTo.visible = false; this.room.visible = true; this.passthrough = false; this.scene.background = new THREE.Color(this.opts.sky ?? 0x06070d); this.camera.position.set(0, this.opts.eye ?? 1.6, 0); });
     (window as any).__app = this;
   }
 
@@ -210,9 +219,22 @@ export class App {
     const clock = new THREE.Clock();
     this.renderer.setAnimationLoop(() => {
       const dt = Math.min(clock.getDelta(), 0.05);
-      this.time += dt;
       this.poll(dt);
-      if (this.started) this.update(dt);
+      if (this.howTo.visible) {
+        // Instruction panel: sits in front of you until the first trigger pull or pinch.
+        if (!this.howToPlaced && this.head.y > 0.3) {
+          const f = _v.copy(this.headDir); f.y = 0; if (f.lengthSq() < 1e-4) f.set(0, 0, -1); f.normalize();
+          this.howTo.position.copy(this.head).addScaledVector(f, 1.5);
+          this.howTo.lookAt(this.head);
+          this.howToPlaced = true;
+        }
+        if (this.howToPlaced && this.time0 > 0.8 && this.hands.some((h) => h.active && h.pinchDown)) { this.howTo.visible = false; this.tone(880, 0.12, 'triangle', 0.2); for (const h of this.hands) h.pinchDown = false; }
+        this.time0 += dt;
+      } else {
+        this.time0 = 0;
+        this.time += dt;
+        if (this.started) this.update(dt);
+      }
       this.renderer.render(this.scene, this.camera);
       for (const k of BTN) this.prev[k] = this.held[k];
     });
@@ -420,5 +442,34 @@ export function setLabel(m: THREE.Mesh, text: string) {
   const y0 = c.height / 2 - (lh * (lines.length - 1)) / 2;
   lines.forEach((l, i) => g.fillText(l, c.width / 2, y0 + i * lh));
   u.tex.needsUpdate = true;
+}
+// Big start panel: title, numbered steps, and how to begin.
+function makeHowTo(title: string, steps: string[]): THREE.Mesh {
+  const c = document.createElement('canvas');
+  c.width = 1024; c.height = 640;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#0b1026'; g.beginPath(); g.roundRect(0, 0, 1024, 640, 36); g.fill();
+  g.strokeStyle = '#4f7cff'; g.lineWidth = 8; g.beginPath(); g.roundRect(4, 4, 1016, 632, 34); g.stroke();
+  g.textBaseline = 'middle'; g.textAlign = 'center';
+  g.fillStyle = '#ffffff'; g.font = '700 84px system-ui, sans-serif'; g.fillText(title, 512, 78);
+  g.textAlign = 'left'; g.font = '600 40px system-ui, sans-serif';
+  let y = 170;
+  steps.forEach((s, n) => {
+    g.fillStyle = '#ffd166'; g.fillText(String(n + 1), 50, y);
+    g.fillStyle = '#eef2ff';
+    const words = s.split(' '); let line = '';
+    for (const w of words) {
+      if (g.measureText(line + w).width > 880) { g.fillText(line, 100, y); y += 48; line = ''; }
+      line += w + ' ';
+    }
+    g.fillText(line, 100, y); y += 66;
+  });
+  g.textAlign = 'center';
+  g.fillStyle = '#9fb0e0'; g.font = '500 32px system-ui, sans-serif';
+  g.fillText('Controllers: trigger.  Bare hands: touch thumb to index finger.', 512, 520);
+  g.fillStyle = '#7fe0a0'; g.font = '700 52px system-ui, sans-serif';
+  g.fillText('Pull the trigger to start', 512, 586);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.94), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
 }
 export { THREE };

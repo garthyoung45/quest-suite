@@ -7,6 +7,7 @@ const app = new App({
   mode: 'vr',
   handsHelp: 'open hand presses in, pinch pulls out. Pinch the red puck to start a fresh lump, the blue puck to change the glaze.',
   padHelp: 'aim your hand at the pot. Hold nothing to press, hold R2 to pull. Square resets, Triangle changes glaze.',
+  steps: ['Push your controller into the spinning clay to press it in', 'Hold the trigger near the clay to pull it outward', 'Red ball: new lump. Blue ball: new colour'],
   sky: 0x15110e,
 });
 

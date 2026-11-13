@@ -7,6 +7,7 @@ const app = new App({
   mode: 'ar',
   handsHelp: 'right pinch sets a point. Hold both pinches for a live hand-to-hand reading. Left pinch removes the last line.',
   padHelp: 'R2 sets a point where your hand is, L2 removes the last line.',
+  steps: ['Right trigger at one spot starts a line', 'Right trigger at another spot ends it and shows the distance', 'Left trigger removes the last line'],
 });
 
 const fmt = (m: number) => { const inches = m / 0.0254; const ft = Math.floor(inches / 12); return `${m < 1 ? (m * 100).toFixed(1) + ' cm' : m.toFixed(3) + ' m'}   ${ft ? ft + ' ft ' : ''}${(inches - ft * 12).toFixed(1)} in`; };

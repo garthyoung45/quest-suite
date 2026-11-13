@@ -7,6 +7,7 @@ const app = new App({
   mode: 'vr',
   handsHelp: 'right-hand pinch on the surface drops the lander. Left-hand pinch changes the map colours.',
   padHelp: 'R2 drops the lander where your hand is. L2 or Triangle changes the map colours.',
+  steps: ['Reach your right controller onto the grey table', 'Pull the trigger to drop a lander: green GO, red NO-GO', 'Left trigger changes the map colours'],
   sky: 0x000004,
 });
 

@@ -7,6 +7,7 @@ const app = new App({
   mode: 'vr',
   handsHelp: 'swing a fingertip down through a pad. Pinch the white puck for the guide beat.',
   padHelp: 'Cross kick, Square snare, Triangle hi-hat, Circle tom, R1 crash, L1 guide beat.',
+  steps: ['Swing your controllers down through the coloured discs', 'They are at waist height, right in front of you', 'Trigger on the white ball starts a guide beat'],
   sky: 0x07060f,
 });
 

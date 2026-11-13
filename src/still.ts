@@ -7,6 +7,7 @@ const app = new App({
   mode: 'vr',
   handsHelp: 'no need to do anything. Hands high makes the sound brighter, hands low makes it deeper. Pinch to change the breathing pace.',
   padHelp: 'R2 changes the breathing pace. Look up or down to change the sound.',
+  steps: ['Sit down. Breathe in as the light grows', 'Breathe out as it shrinks', 'Trigger changes the breathing pace'],
   sky: 0x05070f,
   eye: 1.2,
 });
