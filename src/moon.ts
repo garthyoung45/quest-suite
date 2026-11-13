@@ -1,13 +1,13 @@
 // Moonwalk: a landing zone on a table you can walk around. Pick a safe site.
-import { App, THREE, makeLabel, setLabel, clamp } from './kit';
+import { App, THREE, makeLabel, setLabel, clamp, best } from './kit';
 
 const app = new App({
   title: 'Moonwalk',
-  blurb: 'A 400 metre patch of lunar ground sits in front of you as a table-top model. Walk around it, pinch a spot to drop a lander, and read whether the site is safe: slope, roughness and sunlight. The terrain is generated, not real mission data.',
+  blurb: 'Three missions. Each puts a blue science beacon on the ground: land safely as close to it as you can. You get three landers per mission. A 400 metre patch of lunar ground sits in front of you as a table-top model. Walk around it, pinch a spot to drop a lander, and read whether the site is safe: slope, roughness and sunlight. The terrain is generated, not real mission data.',
   mode: 'vr',
   handsHelp: 'right-hand pinch on the surface drops the lander. Left-hand pinch changes the map colours.',
   padHelp: 'R2 drops the lander where your hand is. L2 or Triangle changes the map colours.',
-  steps: ['Reach your right controller onto the grey table', 'Pull the trigger to drop a lander: green GO, red NO-GO', 'Left trigger changes the map colours'],
+  steps: ['A blue beacon marks the science target on the table', 'Right trigger on the surface drops a lander. Land SAFE and CLOSE to the beacon', 'Left trigger changes the map: red is unsafe, green is safe'],
   sky: 0x000004,
 });
 
@@ -111,6 +111,30 @@ cursor.rotation.x = -Math.PI / 2;
 app.scene.add(cursor);
 
 let last: any = null;
+// Missions: a beacon on awkward ground with safe ground somewhere nearby.
+const beacon = new THREE.Group();
+const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.14, 6), new THREE.MeshBasicMaterial({ color: 0x4fd0ff }));
+pole.position.y = 0.07;
+const orb = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 8), new THREE.MeshBasicMaterial({ color: 0x9fe8ff }));
+orb.position.y = 0.145;
+beacon.add(pole, orb);
+app.scene.add(beacon);
+let mission = 0, tries = 3, total = 0, beaconK = 0, waitT = 0, over = false;
+const cellPos = (k: number, out: THREE.Vector3) => { const i = k % (N + 1), j = Math.floor(k / (N + 1)); return out.set(origin.x + (i / N - 0.5) * SIZE, origin.y + H[k] * K * 1.5, origin.z + (j / N - 0.5) * SIZE); };
+const metres = (a: number, b: number) => Math.hypot((a % (N + 1)) - (b % (N + 1)), Math.floor(a / (N + 1)) - Math.floor(b / (N + 1))) * CELL;
+function newMission() {
+  for (let n = 0; n < 400; n++) {
+    const i = 10 + Math.floor(Math.random() * (N - 20)), j = 10 + Math.floor(Math.random() * (N - 20)), k = j * (N + 1) + i;
+    if (safe(k)) continue;
+    let near = false;
+    for (let b = -8; b <= 8 && !near; b += 2) for (let a = -8; a <= 8; a += 2) if (safe((j + b) * (N + 1) + i + a)) { near = true; break; }
+    if (near) { beaconK = k; break; }
+  }
+  cellPos(beaconK, beacon.position);
+  tries = 3; lander.visible = false;
+  setLabel(board, `Mission ${mission + 1} of 3     Total ${total}\nLand safe and close to the blue beacon\n3 landers left     ${VIEWS[view]}`);
+}
+function restart() { mission = 0; total = 0; over = false; newMission(); }
 function cellAt(p: THREE.Vector3) {
   const i = Math.round(((p.x - origin.x) / SIZE + 0.5) * N), j = Math.round(((p.z - origin.z) / SIZE + 0.5) * N);
   if (i < 0 || j < 0 || i > N || j > N) return -1;
@@ -126,20 +150,30 @@ function land(k: number) {
   lander.visible = true;
   (ring.material as THREE.MeshBasicMaterial).color.set(go ? 0x35c46a : 0xff4d4d);
   const why = [ms > 8 ? 'too steep' : '', mr > 0.35 ? 'too rough' : '', !sun ? 'in shadow' : ''].filter(Boolean).join(', ');
-  setLabel(board, `${go ? 'GO: safe to land' : 'NO-GO: ' + why}\nSlope ${ms.toFixed(1)} deg (limit 8)   Roughness ${(mr * 100).toFixed(0)} cm (limit 35)\n${sun ? 'In sunlight' : 'In shadow'}   ${VIEWS[view]}`);
   go ? app.good() : app.bad();
-  last = { k, go, slope: ms, rough: mr, sun };
+  app.burst(lander.position, go ? 0x35c46a : 0xff7a4d, go ? 24 : 12, 0.5);
+  app.buzz(1, go ? 0.5 : 1, go ? 60 : 160);
+  const dist = metres(k, beaconK);
+  tries--;
+  let pts = 0;
+  if (go) pts = Math.max(5, Math.round(100 - dist * 1.2));
+  const doneMission = go || tries === 0;
+  if (doneMission) { total += pts; mission++; waitT = 3; }
+  setLabel(board, `${go ? 'GO: landed ' + dist.toFixed(0) + ' m from the beacon   +' + pts : 'NO-GO: ' + why + (tries ? '   ' + tries + ' landers left' : '   mission lost')}\nSlope ${ms.toFixed(1)} deg (limit 8)   Roughness ${(mr * 100).toFixed(0)} cm (limit 35)\n${sun ? 'In sunlight' : 'In shadow'}   Total ${total}`);
+  last = { k, go, slope: ms, rough: mr, sun, dist, pts };
 }
 function nextView() { view = (view + 1) % 3; paint(); app.tone(700, 0.08, 'triangle', 0.15); app.say(`${VIEWS[view]}. Pinch the surface to drop the lander.`); }
 
-app.onStart = () => { setLabel(board, 'Pinch the surface to drop the lander\nGreen ring is GO, red is NO-GO'); app.say('Right pinch on the surface drops the lander. Left pinch changes the map.'); };
-app.run(() => {
+app.onStart = () => { restart(); app.say('Right pinch on the surface drops the lander. Left pinch changes the map.'); };
+app.run((dt) => {
+  orb.scale.setScalar(1 + 0.3 * Math.sin(app.time * 5));
+  if (waitT > 0) { waitT -= dt; if (waitT <= 0) { if (mission >= 3) { over = true; const b = best('moonwalk', total); setLabel(board, `All three missions flown\nTotal ${total} of 300     Best ${b}\nRight trigger on the surface to fly again`); app.say(`Total ${total} of 300. Best ${b}.`); } else newMission(); } return; }
   const r = app.hands[1], l = app.hands[0];
   const k = r.active ? cellAt(r.pos) : -1;
   const near = k >= 0 && Math.abs(r.pos.y - (origin.y + H[k] * K * 1.5)) < 0.3;
   cursor.visible = near;
   if (near) cursor.position.set(r.pos.x, origin.y + H[k] * K * 1.5 + 0.006, r.pos.z);
-  if (r.pinchDown && near) land(k);
+  if (r.pinchDown && near) { if (over) restart(); else land(k); }
   if ((l.active && l.pinchDown) || app.hit('triangle')) nextView();
 });
-(window as any).__state = () => ({ view, last, origin: origin.toArray(), safeShare: +(Array.from(H).filter((_, k) => safe(k)).length / H.length).toFixed(2) });
+(window as any).__state = () => ({ view, last, mission, tries, total, over, beacon: beacon.position.toArray(), beaconK, safeCells: Array.from({ length: H.length }, (_, k) => k).filter((k) => safe(k) && metres(k, beaconK) < 60).slice(0, 5).map((k) => cellPos(k, new THREE.Vector3()).toArray()), origin: origin.toArray(), safeShare: +(Array.from(H).filter((_, k) => safe(k)).length / H.length).toFixed(2) });

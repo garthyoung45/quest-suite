@@ -81,7 +81,7 @@ app.run((dt) => {
       d.copy(f.m.position).sub(h.pos);
       const dist = d.length(), speed = h.vel.length();
       if (dist < 0.45 && speed > 0.9) f.v.addScaledVector(d.normalize(), (0.45 - dist) * speed * 6 * pace * dt);
-      if (playing && h.pinchDown && dist < 0.09) {
+      if (playing && ((h.pinchDown && dist < 0.13) || (h.pinch && dist < 0.06))) {
         combo = comboT > 0 ? combo + 1 : 1; comboT = 3;
         const pts = (f.gold ? 5 : 1) * Math.min(combo, 4);
         score += pts; caught++;
