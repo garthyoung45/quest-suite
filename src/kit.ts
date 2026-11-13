@@ -49,6 +49,8 @@ export class App {
   time = 0;
   opts: AppOptions;
   room = new THREE.Group();
+  /** Real surfaces the headset knows about (Quest 3 room setup). Empty elsewhere. */
+  planes: { matrix: THREE.Matrix4; polygon: { x: number; y: number; z: number }[]; kind: string }[] = [];
   private held: Record<string, boolean> = {};
   private prev: Record<string, boolean> = {};
   private keys: Record<string, boolean> = {};
@@ -176,7 +178,7 @@ export class App {
     }
     xrBtn.onclick = async () => {
       this.begin(ov);
-      const init = { requiredFeatures: ['local-floor'], optionalFeatures: ['hand-tracking'] };
+      const init = { requiredFeatures: ['local-floor'], optionalFeatures: o.mode === 'ar' ? ['hand-tracking', 'plane-detection'] : ['hand-tracking'] };
       let session: any = null;
       if (o.mode === 'ar') {
         try { session = await xr.requestSession('immersive-ar', init); this.passthrough = true; this.scene.background = null; } catch { session = null; }
@@ -308,6 +310,15 @@ export class App {
 
     if (this.inXR) {
       // Floating HUD: sits low in front, follows lazily.
+      this.planes.length = 0;
+      try {
+        const frame: any = this.renderer.xr.getFrame();
+        const ref = this.renderer.xr.getReferenceSpace();
+        if (frame?.detectedPlanes && ref) frame.detectedPlanes.forEach((pl: any) => {
+          const pose = frame.getPose(pl.planeSpace, ref);
+          if (pose) this.planes.push({ matrix: new THREE.Matrix4().fromArray(pose.transform.matrix), polygon: Array.from(pl.polygon), kind: pl.semanticLabel || pl.orientation || 'surface' });
+        });
+      } catch { /* plane detection not available */ }
       this.hudMesh.visible = !!this.hudText;
       const f = _v.copy(this.headDir); f.y = 0; if (f.lengthSq() < 1e-4) f.set(0, 0, -1); f.normalize();
       const target = _v2.copy(this.head).addScaledVector(f, 0.85); target.y = this.head.y - 0.42;

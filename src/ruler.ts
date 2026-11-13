@@ -3,7 +3,7 @@ import { App, THREE, makeLabel, setLabel } from './kit';
 
 const app = new App({
   title: 'Room Ruler',
-  blurb: 'Measure your real room. Pinch once to start a line, pinch again to end it. Pinch with both hands at once for a live reading between them. Good to about a centimetre or two, so treat it as a quick check, not a tape measure.',
+  blurb: 'Measure your real room. Pinch once to start a line, pinch again to end it. Pinch with both hands at once for a live reading between them. On a Quest 3 with room setup done, walls, floor and tables are outlined with their sizes. Good to about a centimetre or two, so treat it as a quick check, not a tape measure.',
   mode: 'ar',
   handsHelp: 'right pinch sets a point. Hold both pinches for a live hand-to-hand reading. Left pinch removes the last line.',
   padHelp: 'R2 sets a point where your hand is, L2 removes the last line.',
@@ -37,6 +37,30 @@ function setEnd(l: Line, b: THREE.Vector3) {
 const live = make(new THREE.Vector3());
 live.g.visible = false;
 
+// Quest 3: outline the surfaces the headset already knows and print their sizes.
+const surf = new THREE.Group();
+app.scene.add(surf);
+let surfKey = '', surfT = 0;
+const smat = new THREE.LineBasicMaterial({ color: 0x7fd6ff });
+function drawSurfaces() {
+  const key = app.planes.map((p) => p.polygon.length + ':' + p.matrix.elements[12].toFixed(2) + p.matrix.elements[13].toFixed(2) + p.matrix.elements[14].toFixed(2)).join('|');
+  if (key === surfKey) return;
+  surfKey = key;
+  for (const c of [...surf.children]) { surf.remove(c); (c as any).geometry?.dispose(); (c as any).material?.map?.dispose(); }
+  for (const p of app.planes.slice(0, 16)) {
+    if (p.polygon.length < 3) continue;
+    const pts = p.polygon.map((q) => new THREE.Vector3(q.x, q.y, q.z));
+    let x0 = Infinity, x1 = -Infinity, z0 = Infinity, z1 = -Infinity;
+    for (const q of pts) { x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); z0 = Math.min(z0, q.z); z1 = Math.max(z1, q.z); }
+    const loop = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), smat);
+    loop.applyMatrix4(p.matrix);
+    const tag = makeLabel(`${p.kind}  ${(x1 - x0).toFixed(2)} m x ${(z1 - z0).toFixed(2)} m`, 0.3, 0.05);
+    tag.position.set((x0 + x1) / 2, 0.03, (z0 + z1) / 2).applyMatrix4(p.matrix);
+    tag.userData.face = true;
+    surf.add(loop, tag);
+  }
+}
+
 app.onStart = () => app.say('Pinch to start a line, pinch again to end it.');
 app.run(() => {
   const [l, r] = app.hands;
@@ -52,6 +76,8 @@ app.run(() => {
     const gone = open ?? lines.pop();
     if (gone) { app.scene.remove(gone.g); open = null; app.tone(300, 0.08, 'triangle', 0.2); app.say('Removed.'); }
   }
+  surfT -= 1; if (surfT <= 0) { surfT = 45; drawSurfaces(); }
+  for (const c of surf.children) if (c.userData.face) c.lookAt(app.head);
   for (const ln of [...lines, live, ...(open ? [open] : [])]) ln.label.lookAt(app.head);
 });
-(window as any).__state = () => ({ count: lines.length, open: !!open, lengths: lines.map((l) => +l.a.distanceTo(l.b).toFixed(3)) });
+(window as any).__state = () => ({ surfaces: surf.children.length / 2, count: lines.length, open: !!open, lengths: lines.map((l) => +l.a.distanceTo(l.b).toFixed(3)) });
