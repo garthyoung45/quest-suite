@@ -10,6 +10,7 @@ const app = new App({
   steps: ['Sit down. Breathe in as the light grows', 'Breathe out as it shrinks', 'Trigger changes the breathing pace'],
   sky: 0x05070f,
   eye: 1.2,
+  fit: false,
 });
 app.room.visible = false;
 const PACES = [{ n: 'Calm', i: 4, o: 6 }, { n: 'Slow', i: 5, o: 7 }, { n: 'Even', i: 4, o: 4 }];

@@ -10,12 +10,15 @@ const ITEMS = [
   { url: 'clay.html', name: 'Clay Wheel', text: 'Shape a spinning pot with your hands.', tags: ['Hands', 'Create'], live: true },
   { url: 'still.html', name: 'Still Room', text: 'A slow breathing room with sound all around you.', tags: ['Spatial audio', 'Calm'], live: true },
 ];
+const BEST: Record<string, [string, string]> = { 'bearing.html': ['bearing', ' of 5'], 'drums.html': ['airkit.l0', '% L1'], 'moon.html': ['moonwalk', ' of 300'], 'labels.html': ['labels', ''], 'fireflies.html': ['fireflies', ''] };
 const grid = document.getElementById('grid')!;
 for (const it of ITEMS) {
   const a = document.createElement('a');
   a.className = 'card' + (it.live ? '' : ' soon');
   a.href = it.url;
-  a.innerHTML = `<h2>${it.name}</h2><p>${it.text}${it.live ? '' : ' (coming soon)'}</p>` + it.tags.map((t) => `<span class="tag">${t}</span>`).join('');
+  let b = '';
+  try { const k = BEST[it.url]; const v = k && localStorage.getItem('best.' + k[0]); if (v) b = `<span class="tag" style="background:#2f6b45;color:#eaffea">Best ${v}${k[1]}</span>`; } catch {}
+  a.innerHTML = `<h2>${it.name}</h2><p>${it.text}${it.live ? '' : ' (coming soon)'}</p>` + it.tags.map((t) => `<span class="tag">${t}</span>`).join('') + b;
   grid.appendChild(a);
 }
 export {};

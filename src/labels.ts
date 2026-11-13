@@ -1,5 +1,5 @@
 // Label Check: equipment tags hang around you. Pass the good ones, fail the bad ones.
-import { App, THREE, makeLabel, setLabel } from './kit';
+import { App, THREE, makeLabel, setLabel, best } from './kit';
 
 const app = new App({
   title: 'Label Check',
@@ -65,6 +65,7 @@ const wp = new THREE.Vector3();
 function answer(t: Tag, saidPass: boolean, idx: number) {
   t.done = true; answered++;
   const ok = saidPass === (t.bad < 0);
+  app.burst(t.g.position, ok ? 0x35c46a : 0xff5d4d, 16, 0.6); app.buzz(1, ok ? 0.4 : 1, ok ? 50 : 160);
   if (ok) { right++; app.good(); } else { app.bad(); misses.push(`Tag ${idx + 1}: ${t.bad < 0 ? 'was fine' : DEFECTS[t.bad]}`); }
   t.pass.visible = t.fail.visible = false;
   const res = makeLabel(ok ? (t.bad < 0 ? 'Correct: fit for use' : 'Correct: ' + DEFECTS[t.bad]) : (t.bad < 0 ? 'Wrong: this one was fine' : 'Missed: ' + DEFECTS[t.bad]), 0.5, 0.06, { bg: ok ? 'rgba(30,120,60,0.95)' : 'rgba(160,40,40,0.95)' });
@@ -72,7 +73,8 @@ function answer(t: Tag, saidPass: boolean, idx: number) {
   if (answered === 8) {
     finished = true;
     const secs = Math.round(app.time - t0);
-    setLabel(board, `${right} of 8 correct in ${secs} s\n${misses.slice(0, 2).join('   ') || 'No misses'}\nPinch here to go again`);
+    const pts = right * 100 + Math.max(0, 120 - secs); const b = best('labels', pts);
+    setLabel(board, `${right} of 8 correct in ${secs} s   Score ${pts}   Best ${b}\n${misses.slice(0, 2).join('   ') || 'No misses'}\nPinch here to go again`);
     app.say(`${right} of 8 correct in ${secs} seconds. Pinch the top board to go again.`);
   } else setLabel(board, `${answered} of 8 checked     ${right} correct`);
 }

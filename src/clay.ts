@@ -77,6 +77,7 @@ app.run((dt) => {
     for (let i = 0; i <= RINGS; i++) {
       const w = Math.exp(-((i - y) * (i - y)) / 6);
       if (w < 0.05) continue;
+      if (w > 0.9 && Math.abs(dist - radii[i]) < 0.03) app.buzz(app.hands.indexOf(h), 0.15, 20);
       if (h.pinch && dist < radii[i] + 0.09 && dist > radii[i] - 0.02) { radii[i] += (dist - radii[i]) * w * dt * 5; touching = 1; dirty = true; }
       else if (!h.pinch && dist < radii[i]) { radii[i] += (dist - radii[i]) * w * dt * 9; touching = 1; dirty = true; }
       radii[i] = clamp(radii[i], 0.012, 0.19);

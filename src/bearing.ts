@@ -1,5 +1,5 @@
 // Bad Bearing: six motors hum around you. One is failing. Find it by ear.
-import { App, THREE, makeLabel, setLabel, rand } from './kit';
+import { App, THREE, makeLabel, setLabel, rand, best } from './kit';
 
 const app = new App({
   title: 'Bad Bearing',
@@ -96,8 +96,10 @@ function startRound() {
   app.say('Put your ear near each motor. Pinch the top of the bad one.');
 }
 
-function tag(i: number) {
+function tag(i: number, hand = 1) {
   const right = i === bad;
+  app.burst(motors[i].top, right ? 0x35c46a : 0xff5d4d, 22, 0.8);
+  app.buzz(hand, right ? 0.5 : 1, right ? 60 : 180);
   if (right) { score++; app.good(); } else app.bad();
   (motors[bad].body.material as THREE.MeshStandardMaterial).color.set(0xd9534f);
   (motors[bad].lamp.material as THREE.MeshBasicMaterial).color.set(0xff3b30);
@@ -116,18 +118,20 @@ app.run((dt) => {
     if (locked <= 0) {
       if (round >= 5) {
         stopAll(); done = true;
-        setLabel(board, `Finished: ${score} of 5 found by ear\nPinch any motor to play again.`);
+        setLabel(board, `Finished: ${score} of 5 found by ear     Best ${best('bearing', score)}\n${['Keep listening', 'Apprentice ear', 'Apprentice ear', 'Technician ear', 'Senior tech ear', 'Master ear'][score]}. Trigger on any motor to play again.`);
         app.say(`You found ${score} of 5. Pinch any motor to play again.`);
       } else startRound();
     }
     return;
   }
-  for (const h of app.hands) {
+  // Motors shake a little; the bad one shakes more as you get close.
+  motors.forEach((m, i) => { m.body.position.y = 1.05 + Math.sin(app.time * m.hz) * (i === bad ? 0.0025 : 0.0008); });
+  for (const [hi, h] of app.hands.entries()) {
     if (!h.active || !h.pinchDown) continue;
     let best = -1, bd = 0.3;
     motors.forEach((m, i) => { const d = Math.hypot(h.pos.x - m.top.x, h.pos.z - m.top.z); if (d < bd && h.pos.y > 0.7 && h.pos.y < 1.6) { bd = d; best = i; } });
     if (best < 0) continue;
-    if (done) { round = 0; score = 0; done = false; startRound(); } else tag(best);
+    if (done) { round = 0; score = 0; done = false; startRound(); } else tag(best, hi);
     break;
   }
 });

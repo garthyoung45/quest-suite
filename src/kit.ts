@@ -375,9 +375,9 @@ export class App {
       this.hudEl.style.display = 'none';
     }
     this.rig.updateMatrixWorld(true);
-    const cam = this.inXR ? this.renderer.xr.getCamera() : this.camera;
-    cam.getWorldPosition(this.head);
-    cam.getWorldDirection(this.headDir);
+    // In the headset three.js keeps this camera's world matrix in step with the real head, rig offset included.
+    this.head.setFromMatrixPosition(this.camera.matrixWorld);
+    this.headDir.set(0, 0, -1).transformDirection(this.camera.matrixWorld);
 
     for (let i = 0; i < 2; i++) {
       const h = this.hands[i];
