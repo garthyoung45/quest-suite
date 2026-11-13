@@ -375,8 +375,9 @@ export const rand = (a: number, b: number) => a + Math.random() * (b - a);
 // ---- text labels ------------------------------------------------------------
 export function makeLabel(text: string, w = 0.4, h = 0.12, opts: { bg?: string; fg?: string; px?: number } = {}): THREE.Mesh {
   const canvas = document.createElement('canvas');
-  const scale = 1024 / w;
-  canvas.width = 1024; canvas.height = Math.round(h * scale);
+  const cw = w < 0.2 ? 256 : w < 0.45 ? 512 : 1024; // small labels get small textures
+  const scale = cw / w;
+  canvas.width = cw; canvas.height = Math.round(h * scale);
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
   const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false }));
@@ -394,14 +395,14 @@ export function setLabel(m: THREE.Mesh, text: string) {
   g.clearRect(0, 0, c.width, c.height);
   if (!text) { u.tex.needsUpdate = true; return; }
   g.fillStyle = u.opts.bg ?? 'rgba(8,10,18,0.78)';
-  const r = 28;
+  const r = c.width * 0.027;
   g.beginPath(); g.roundRect(0, 0, c.width, c.height, r); g.fill();
   const lines = text.split('\n');
-  let px = u.opts.px ?? Math.min(72, Math.floor((c.height - 30) / lines.length / 1.2));
+  let px = u.opts.px ?? Math.floor((c.height * 0.84) / lines.length / 1.2);
   g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = u.opts.fg ?? '#eef2ff';
   for (;;) {
     g.font = `600 ${px}px system-ui, sans-serif`;
-    if (px <= 18 || Math.max(...lines.map((l) => g.measureText(l).width)) < c.width - 50) break;
+    if (px <= 12 || Math.max(...lines.map((l) => g.measureText(l).width)) < c.width * 0.94) break;
     px -= 3;
   }
   const lh = px * 1.2;
