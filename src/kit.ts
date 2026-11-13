@@ -25,6 +25,7 @@ export interface AppOptions {
   steps: string[]; // in-headset how-to, controller first, 2 or 3 short lines
   sky?: number;
   eye?: number; // flat-mode eye height
+  fit?: boolean; // raise a seated player to standing height (default true)
 }
 
 const BTN = ['cross', 'circle', 'square', 'triangle', 'l1', 'r1', 'l2', 'r2', 'share', 'options', 'l3', 'r3', 'up', 'down', 'left', 'right'];
@@ -64,6 +65,14 @@ export class App {
   private hudText = '';
   private howTo!: THREE.Mesh;
   private howToPlaced = false;
+  private sources: any[] = [null, null];
+  private menuBtn!: THREE.Mesh;
+  private menu = new THREE.Group();
+  private menuItems: { m: THREE.Mesh; act: () => void }[] = [];
+  private fx!: THREE.Points;
+  private fxV = new Float32Array(240 * 3);
+  private fxLife = new Float32Array(240);
+  private fxNext = 0;
   private xrSelect = [false, false];
   private xrHands: THREE.Group[] = [];
   private xrCtrl: THREE.Group[] = [];
@@ -99,7 +108,23 @@ export class App {
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -0.002;
     this.room.add(floor);
+    if (opts.mode === 'vr') {
+      // Gradient sky dome: one draw call, no texture.
+      const dome = new THREE.SphereGeometry(60, 24, 12);
+      const base = new THREE.Color(opts.sky ?? 0x06070d), top = base.clone().multiplyScalar(0.5), glow = base.clone().lerp(new THREE.Color(0x5a6fd8), 0.35);
+      const col = new Float32Array(dome.attributes.position.count * 3), c = new THREE.Color();
+      for (let i = 0; i < dome.attributes.position.count; i++) { const y = dome.attributes.position.getY(i) / 60; c.copy(glow).lerp(top, clamp(Math.abs(y) * 2.2, 0, 1)); col.set([c.r, c.g, c.b], i * 3); }
+      dome.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      this.room.add(new THREE.Mesh(dome, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, depthWrite: false, fog: false })));
+    }
     this.scene.add(this.room);
+    // Spark pool for hits and catches: one draw call.
+    const fg = new THREE.BufferGeometry();
+    fg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(240 * 3).fill(-999), 3));
+    fg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(240 * 3), 3));
+    this.fx = new THREE.Points(fg, new THREE.PointsMaterial({ size: 0.022, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+    this.fx.frustumCulled = false;
+    this.scene.add(this.fx);
 
     for (let i = 0; i < 2; i++) {
       const dot = new THREE.Mesh(new THREE.SphereGeometry(0.012, 12, 8), new THREE.MeshBasicMaterial({ color: i ? 0x7fd6ff : 0xffc86b }));
@@ -110,7 +135,7 @@ export class App {
       this.rig.add(h, c);
       this.xrHands.push(h);
       this.xrCtrl.push(c);
-      c.addEventListener('connected', (e: any) => { this.handed[i] = e.data?.handedness ?? null; });
+      c.addEventListener('connected', (e: any) => { this.handed[i] = e.data?.handedness ?? null; this.sources[i] = e.data; });
       c.addEventListener('disconnected', () => { this.handed[i] = null; this.xrSelect[i] = false; });
       c.addEventListener('selectstart', () => { this.xrSelect[i] = true; });
       c.addEventListener('selectend', () => { this.xrSelect[i] = false; });
@@ -125,6 +150,15 @@ export class App {
     this.howTo.renderOrder = 20;
     (this.howTo.material as THREE.MeshBasicMaterial).depthTest = false;
     this.scene.add(this.howTo);
+    // Menu: a small button low on your left, and a three-choice panel.
+    this.menuBtn = makeLabel('MENU', 0.13, 0.055, { bg: 'rgba(79,124,255,0.9)' });
+    this.menuBtn.visible = false;
+    this.menu.visible = false;
+    this.scene.add(this.menuBtn, this.menu);
+    const item = (text: string, y: number, bg: string, act: () => void) => { const m = makeLabel(text, 0.5, 0.11, { bg }); m.position.y = y; this.menu.add(m); this.menuItems.push({ m, act }); };
+    item('Resume', 0.13, 'rgba(40,120,70,0.95)', () => { this.menu.visible = false; });
+    item('How to play', 0, 'rgba(40,50,90,0.95)', () => { this.menu.visible = false; this.howTo.visible = true; this.howToPlaced = false; });
+    item('Exit to hub', -0.13, 'rgba(150,50,50,0.95)', () => { this.exit(); });
     this.hudMesh = makeLabel('', 0.62, 0.2);
     this.hudMesh.visible = false;
     this.scene.add(this.hudMesh);
@@ -151,7 +185,7 @@ export class App {
     el.addEventListener('contextmenu', (e) => e.preventDefault());
     el.addEventListener('wheel', (e) => { this.reach = clamp(this.reach - e.deltaY * 0.0006, 0.2, 1.6); });
     this.renderer.xr.addEventListener('sessionstart', () => { this.inXR = true; this.howTo.visible = true; this.howToPlaced = false; this.room.visible = !this.passthrough; this.rig.position.set(0, 0, 0); this.camera.position.set(0, 0, 0); });
-    this.renderer.xr.addEventListener('sessionend', () => { this.inXR = false; this.howTo.visible = false; this.room.visible = true; this.passthrough = false; this.scene.background = new THREE.Color(this.opts.sky ?? 0x06070d); this.camera.position.set(0, this.opts.eye ?? 1.6, 0); });
+    this.renderer.xr.addEventListener('sessionend', () => { this.inXR = false; this.howTo.visible = false; this.menu.visible = false; this.menuBtn.visible = false; this.rig.position.y = 0; this.room.visible = true; this.passthrough = false; this.scene.background = new THREE.Color(this.opts.sky ?? 0x06070d); this.camera.position.set(0, this.opts.eye ?? 1.6, 0); });
     (window as any).__app = this;
   }
 
@@ -228,16 +262,78 @@ export class App {
           this.howTo.lookAt(this.head);
           this.howToPlaced = true;
         }
-        if (this.howToPlaced && this.time0 > 0.8 && this.hands.some((h) => h.active && h.pinchDown)) { this.howTo.visible = false; this.tone(880, 0.12, 'triangle', 0.2); for (const h of this.hands) h.pinchDown = false; }
+        if (this.howToPlaced && this.time0 > 0.8 && this.hands.some((h) => h.active && h.pinchDown)) {
+          this.howTo.visible = false;
+          // Fit: a seated player is lifted to standing height so everything is in reach.
+          if (this.opts.fit !== false && this.rig.position.y === 0 && this.head.y < 1.35) this.rig.position.y = clamp(1.6 - this.head.y, 0, 1.2);
+          const f = _v.copy(this.headDir); f.y = 0; f.normalize();
+          this.menuBtn.position.set(this.head.x, this.head.y + this.rig.position.y - 0.5, this.head.z).addScaledVector(f, 0.3).add(_v2.set(f.z, 0, -f.x).multiplyScalar(0.5));
+          this.menuBtn.lookAt(this.head.x, this.head.y + this.rig.position.y, this.head.z);
+          this.menuBtn.visible = true; this.tone(880, 0.12, 'triangle', 0.2); for (const h of this.hands) h.pinchDown = false; }
         this.time0 += dt;
+      } else if (this.menu.visible) {
+        for (const h of this.hands) if (h.active && h.pinchDown) for (const it of this.menuItems) if (it.m.getWorldPosition(_v).distanceTo(h.pos) < 0.12) { this.tone(700, 0.08, 'triangle', 0.2); it.act(); break; }
       } else {
         this.time0 = 0;
         this.time += dt;
+        if (this.inXR && this.menuBtn.visible && this.hands.some((h) => h.active && h.pinchDown && h.pos.distanceTo(this.menuBtn.position) < 0.1)) {
+          const f = _v.copy(this.headDir); f.y = 0; f.normalize();
+          this.menu.position.copy(this.head).addScaledVector(f, 0.5); this.menu.position.y -= 0.12;
+          this.menu.lookAt(this.head);
+          this.menu.visible = true;
+          for (const h of this.hands) h.pinchDown = false;
+        }
+        if (!this.inXR && (this.hit('share') || this.keys.Backspace)) location.href = './';
         if (this.started) this.update(dt);
       }
+      this.stepFx(dt);
       this.renderer.render(this.scene, this.camera);
       for (const k of BTN) this.prev[k] = this.held[k];
     });
+  }
+
+  /** Leave the headset session and go back to the hub page. */
+  exit() { const s = this.renderer.xr.getSession(); const go = () => { location.href = './'; }; if (s) s.end().then(go, go); else go(); }
+
+  /** Controller vibration. hand: 0 left, 1 right. Does nothing with bare hands. */
+  buzz(hand: number, strength = 0.6, ms = 40) {
+    try {
+      if (this.inXR) {
+        const want = hand ? 'right' : 'left';
+        for (let i = 0; i < 2; i++) if (this.handed[i] === want) { const a = this.sources[i]?.gamepad?.hapticActuators?.[0]; a?.pulse?.(strength, ms); }
+      } else {
+        const gp: any = Array.from(navigator.getGamepads?.() ?? []).find((g) => g && g.connected);
+        gp?.vibrationActuator?.playEffect?.('dual-rumble', { duration: ms, strongMagnitude: strength * 0.6, weakMagnitude: strength });
+      }
+    } catch { /* no haptics */ }
+  }
+
+  /** A puff of sparks at a point. */
+  burst(pos: THREE.Vector3, color: number, n = 14, speed = 1) {
+    const p = this.fx.geometry.attributes.position as THREE.BufferAttribute, c = this.fx.geometry.attributes.color as THREE.BufferAttribute;
+    const col = new THREE.Color(color);
+    for (let k = 0; k < n; k++) {
+      const i = this.fxNext; this.fxNext = (i + 1) % 240;
+      p.setXYZ(i, pos.x, pos.y, pos.z); c.setXYZ(i, col.r, col.g, col.b);
+      const a = Math.random() * 6.283, u = Math.random() * 2 - 1, s = Math.sqrt(1 - u * u) * speed * (0.4 + Math.random() * 0.8);
+      this.fxV[i * 3] = Math.cos(a) * s; this.fxV[i * 3 + 1] = u * speed * 0.8 + 0.5 * speed; this.fxV[i * 3 + 2] = Math.sin(a) * s;
+      this.fxLife[i] = 0.5 + Math.random() * 0.4;
+    }
+    p.needsUpdate = true; c.needsUpdate = true;
+  }
+  private stepFx(dt: number) {
+    const p = this.fx.geometry.attributes.position as THREE.BufferAttribute, c = this.fx.geometry.attributes.color as THREE.BufferAttribute;
+    let any = false;
+    for (let i = 0; i < 240; i++) {
+      if (this.fxLife[i] <= 0) continue;
+      any = true;
+      this.fxLife[i] -= dt;
+      if (this.fxLife[i] <= 0) { p.setXYZ(i, 0, -999, 0); continue; }
+      this.fxV[i * 3 + 1] -= 2.2 * dt;
+      p.setXYZ(i, p.getX(i) + this.fxV[i * 3] * dt, p.getY(i) + this.fxV[i * 3 + 1] * dt, p.getZ(i) + this.fxV[i * 3 + 2] * dt);
+      const f = 1 - 2.2 * dt; c.setXYZ(i, c.getX(i) * f, c.getY(i) * f, c.getZ(i) * f);
+    }
+    if (any) { p.needsUpdate = true; c.needsUpdate = true; }
   }
 
   btn(name: string) { return !!this.held[name]; }
@@ -403,6 +499,13 @@ const BTN_CSS = 'font:600 17px system-ui;padding:13px 20px;border:0;border-radiu
 const _v = new THREE.Vector3();
 const _v2 = new THREE.Vector3();
 export const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+/** Saved best score for a game (higher is better unless lowerWins). Returns the best after the update. */
+export function best(key: string, value?: number, lowerWins = false): number {
+  let b = NaN;
+  try { b = parseFloat(localStorage.getItem('best.' + key) ?? 'NaN'); } catch {}
+  if (value != null && (isNaN(b) || (lowerWins ? value < b : value > b))) { b = value; try { localStorage.setItem('best.' + key, String(b)); } catch {} }
+  return isNaN(b) ? 0 : b;
+}
 export const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
 // ---- text labels ------------------------------------------------------------
@@ -466,7 +569,7 @@ function makeHowTo(title: string, steps: string[]): THREE.Mesh {
   });
   g.textAlign = 'center';
   g.fillStyle = '#9fb0e0'; g.font = '500 32px system-ui, sans-serif';
-  g.fillText('Controllers: trigger.  Bare hands: touch thumb to index finger.', 512, 520);
+  g.fillText('Controllers: trigger.  Bare hands: thumb to index.  MENU button: low on your left.', 512, 520);
   g.fillStyle = '#7fe0a0'; g.font = '700 52px system-ui, sans-serif';
   g.fillText('Pull the trigger to start', 512, 586);
   const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
