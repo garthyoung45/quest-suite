@@ -51,7 +51,7 @@ Chain mode, both tasks: **stopped early**. The fourth model returned an empty re
 Total spent on the six runs: $0.6053.
 
 ### What the result supports
-1. The multi-model panel never beat the best single model on either task.
+1. On these four panel runs, over two made-up documents with answer keys written by one of the tested models, the multi-model panel never beat the best single model on either task.
 2. It cost 21 to 85 times as much as the cheapest fully correct single answer.
 3. Reading each other's answers repaired weaker members on the arithmetic task (three cases, all ending fully correct).
 4. If you do not know in advance which model is strong on a task, a panel protects you from picking a weak one. On task 2 the same model scored 3 of 7 in one run and 7 of 7 in the next, and another scored 5 then 3.
@@ -60,7 +60,7 @@ Total spent on the six runs: $0.6053.
 ### What it does not support
 - Any claim that several models are smarter than one.
 - Anything about hard, long or real-world work. These are two short tasks. Every strong model was already at or near the ceiling.
-- Any general claim at all. Four panel runs.
+- Any general claim at all, in either direction. Four panel runs, two made-up documents, answer keys written by one of the tested models. It does not show that multi-model review fails in general, or that it always costs twenty times more. A fair test would need a larger and varied task set, keys written and held by someone independent, equal cost or time budgets for panel and single model, and repeated runs.
 
 ### Failures and oddities, kept as they happened
 - **Task 1, the one disputed item.** Step 3 has the worker press the emergency stop mid-cycle as the way to shut down. The key counts that as a defect (the normal stop sequence should be used). Three models flagged it and three did not. In both runs one model flagged it alone, then withdrew it after reading the others, saying it was a preference and not a lockout defect. The summary reported the split and left it out of the final list. If a reviewer rules that step 3 is not a defect, then task 1 shows no difference between any model and the panel. Either way the panel does not come out ahead.

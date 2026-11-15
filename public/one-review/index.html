@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>UNBOUNDED ONE: open for review</title>
-<meta name="description" content="One person's approval gate and multi-model test rig, published with its failures and a rerunnable scored test. Nothing here has been independently verified.">
+<meta name="description" content="An unaudited human-approval gate demo with no executor yet, plus a small multi-model test harness, published with its failures and a rerunnable scored test. Nothing here has been independently verified.">
 <style>
 :root{--bg:#fbfaf7;--fg:#1c1b19;--muted:#5d5a55;--line:#dcd8d0;--card:#fff;--accent:#8a3b12;--good:#1f6b3a;--bad:#9b2c2c}
 @media (prefers-color-scheme:dark){:root{--bg:#161513;--fg:#ebe8e2;--muted:#a8a39a;--line:#37342f;--card:#1f1d1a;--accent:#e2a06f;--good:#7fc79a;--bad:#e28a8a}}
@@ -33,15 +33,11 @@ pre{background:var(--card);border:1px solid var(--line);border-radius:8px;paddin
 </head>
 <body>
 <main>
-<p class="meta">Published 15 November 2026 · Garth Young</p>
+<p class="meta">Published 15 November 2026 · corrected the same day after outside criticism (see the end of the page) · Garth Young</p>
 <h1>UNBOUNDED ONE: open for review</h1>
 <p class="lead">I'm a maintenance tradesman. Over about a month of evenings, with a lot of help from AI coding assistants, I built two small things. Nobody outside has checked them. I'd like a qualified person to tell me what they amount to.</p>
+<p><strong>In plain words: this is an unaudited human-approval gate demo with no executor yet, plus a small multi-model test harness.</strong> Neither part is new as an architecture. The most useful thing here is probably a negative result from the test harness, so it comes first.</p>
 
-<div class="box">
-<p><strong>Part one, an approval gate.</strong> AI assistants from several companies can read one status page and file requests. Nothing counts until I approve that exact request with a passkey. There is a STOP control and a hash-chained record.</p>
-<p><strong>Part two, a test rig.</strong> A script of about 130 lines puts one task to six AI models from five companies, records every answer, cost and handoff, and always stops for a human.</p>
-<p>The two parts are not connected to each other. The models do not talk to each other on their own. The script passes the text, or I do.</p>
-</div>
 
 <h2>The result you can check</h2>
 <p>I had six models review two made-up maintenance documents with planted errors: a 22-step lockout procedure with 10 safety defects, and an 18-line reliability summary with 7 arithmetic errors. The answer keys were hashed before any model saw the tasks. Each model answered alone first, then read the others and replied, then one wrote a final summary.</p>
@@ -58,8 +54,16 @@ pre{background:var(--card);border:1px solid var(--line);border-radius:8px;paddin
 </tbody>
 </table>
 </div>
-<p>The group never beat the best single model, and it cost at least twenty times more. It did pull two weaker models up to a correct answer on the arithmetic task. The one-point gap on the lockout task is a single disputed item, where the models split evenly and one changed sides. Both runs of the script's chain mode stopped early because one model returned an empty reply.</p>
-<p class="small">Two small tasks, four panel runs. The keys were written by a model from one of the six vendors. Full table, design and limits: <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/DEMONSTRATION.md">DEMONSTRATION.md</a>.</p>
+<p>On these four runs the group never beat the best single model, and it cost at least twenty times more than the cheapest correct single answer. It did pull two weaker models up to a correct answer on the arithmetic task. The one-point gap on the lockout task is a single disputed item, where the models split evenly and one changed sides. Both runs of the script's chain mode stopped early because one model returned an empty reply.</p>
+<p><strong>How far this goes: not far.</strong> It is four panel runs over two made-up documents, and the answer keys were written by one of the six models tested. It does not show that multi-model review fails in general or always costs twenty times more. A fair test would need a larger and varied task set, answer keys written and held by someone independent, equal cost or time budgets for the panel and the single model, and repeated runs. If you write a key I have not seen, I will run it and publish the records.</p>
+<p class="small">Full table, design and limits: <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/DEMONSTRATION.md">DEMONSTRATION.md</a>.</p>
+
+<h2>What the two parts are</h2>
+<div class="box">
+<p><strong>Part one, an approval gate demo.</strong> AI assistants from several companies each hold a key to one status page. By design some keys can only read the status; other keys can also file a request for me to approve; no key can approve or change anything. Which keys have which scope has not been read back from the live system. Filing a request is a write: it takes my attention, and it is the main thing an attacker would aim at. Nothing counts until I approve that exact request with a passkey, and nothing carries out an approved request. There is a STOP control and a hash-chained record. The gate's source code is not published here, so none of this can be reviewed from this page.</p>
+<p><strong>Part two, a test harness.</strong> A script of about 130 lines puts one task to six AI models from five companies, records every answer, cost and handoff, and always stops for a human.</p>
+<p>The two parts are not connected to each other. The models do not talk to each other on their own. The script passes the text, or I do.</p>
+</div>
 
 <h2>What I already know is wrong or missing</h2>
 <ul>
@@ -69,8 +73,10 @@ pre{background:var(--card);border:1px solid var(--line);border-radius:8px;paddin
 <li>An eight-minute outage of the AI endpoint, caused by an invisible character in a setting, went unnoticed by my monitoring.</li>
 <li>Every change so far was deployed by a signed-in tool on a home computer, which goes around the gate.</li>
 <li>The record has one off-site copy and no outside anchor.</li>
-<li>The gate's offline test results (63 of 70 cases passed, 0 failed, 7 written limits) were produced by the same AI tooling that built it.</li>
-<li>I do not know whether any of this is new. Approval gates for AI agents and multi-model panels both exist.</li>
+<li>The gate's only test results are self-graded. Offline, 63 of 70 scripted attack and failure cases passed, with 7 documented limits. The same AI tooling that built the gate wrote and ran those tests. That is not a security review, nobody outside has run them, and the live failures in this list sit beside them.</li>
+<li>Keys that can file a request have write access to my queue. Queue spam, approval fatigue and a request worded to look routine have not been tested by anyone outside.</li>
+<li>A different prototype of mine (a coordination engine, not in this package and not the gate) was attacked by a separate AI session: 31 of 49 attacks broke its first version, and after fixes 17 of 20 new attacks broke the second.</li>
+<li>None of this is new as an architecture. Closest existing things I have been pointed to: for the gate, human-in-the-loop approval for AI agents (LangGraph's interrupt-and-approve pattern, AutoGen's human approval, tool-approval settings, HumanLayer, the approval steps in n8n and Zapier); for the test harness, LLM-as-judge panels, ensembles and Mixture of Agents. I have not compared mine against them in detail.</li>
 </ul>
 <p>The full list is in <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CLAIMS_I_CANNOT_DEFEND.md">CLAIMS_I_CANNOT_DEFEND.md</a>.</p>
 
@@ -103,6 +109,8 @@ cd ../roundtable &amp;&amp; mkdir work &amp;&amp; node test_roundtable.mjs work 
 <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/REVIEW_PROTOCOL_AND_SCORECARD.md">REVIEW_PROTOCOL_AND_SCORECARD.md</a>: fourteen checks you can run without trusting me</li>
 <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/FAQ.md">FAQ.md</a>: sixty questions</li>
 </ul>
+<h2>Criticism so far</h2>
+<p>Before posting this anywhere I asked four AI assistants to criticise this page. They are not independent human reviewers and this is not verification. What they said, and what I changed on 15 November: "read-only keys" was wrong for the keys that can file requests, so the key wording above is new; the offline test figures are now called self-graded wherever they appear; the multi-model result now carries its limits and is not offered as a general finding; the closest existing things are named; and the plain label at the top is theirs. What they asked for that I have not done: publish the gate's source and attack suite, get one independent person to review the source and a threat model before anything that can act is connected, an independent answer key, and a longer live record.</p>
 <p class="small">Not in the package: the approval gate's source code and its offline attack suite. I'm deciding how to release them, since the live system runs the same code. This page and the documents were drafted by an AI assistant at my request.</p>
 </main>
 </body>

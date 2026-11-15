@@ -1,6 +1,8 @@
 # UNBOUNDED ONE: reviewer package
 
-Published 15 November 2026 by the builder, Garth Young.
+Published 15 November 2026 by the builder, Garth Young. Corrected the same day after outside criticism.
+
+**What this is, in plain words: an unaudited human-approval gate demo with no executor yet, plus a small multi-model test harness.** Neither part is new as an architecture; the closest existing things are named in `FAQ.md`, question 49. The gate's source code is not in this package, so its security cannot be reviewed from here.
 
 One person's project, built over about a month of evenings with AI coding assistants. Nothing here has been verified by anyone outside. You are invited to say what it is, including "ordinary", "incomplete", "wrongly described" or "not useful".
 

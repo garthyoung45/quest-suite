@@ -31,7 +31,7 @@ Same system. That post was about the approval gate alone. This is the gate plus 
 ## Are the AIs connected?
 
 **9. Are the AIs actually connected to each other?**
-No. They are each connected to the gate, read-only for most of them. They are not connected to each other.
+No. Each is connected to the gate only. By design five of the eight keys can only read a status line and the rule text; three older keys can also file a request into my queue. Filing a request is a write: it takes my attention, and it is the main thing an attacker would aim at. None of them can approve anything. They are not connected to each other.
 
 **10. Do they talk to each other?**
 Only inside one script run, where the script passes one model's answer to the next. Nothing starts that by itself. Outside the script, I copy and paste between apps.
@@ -69,10 +69,10 @@ Three, all on one evening, 14 November 2026. Before that the Approve button didn
 The gate refuses what it should, in offline tests. STOP holds in offline tests. The record chain recomputes. The script reaches six models and records everything. Three live approvals went through.
 
 **21. What doesn't work?**
-Nothing executes an approved request. The gate's own phone alerts fail. Monitoring can't see the AI link go down. The outside witness for the record was never connected. Deployments go around the gate. One exposed read-only key hasn't been replaced yet.
+Nothing executes an approved request. The gate's own phone alerts fail. Monitoring can't see the AI link go down. The outside witness for the record was never connected. Deployments go around the gate. One exposed key (a status-only one: it reads status and the rule text, cannot file or approve) hasn't been replaced yet.
 
 **22. Does using six models beat using one?**
-Not on my tests. On two scored tasks with planted errors, the six-model panel never beat the best single model, and it cost at least twenty times more than the cheapest correct single answer. What it did do: on the arithmetic task, two models that were wrong alone were right after reading the others. So it can pull a weak answer up. It didn't lift the best one.
+Not on my tests, and my tests are small. On four panel runs over two made-up documents with planted errors, with answer keys written by one of the tested models, the six-model panel never beat the best single model, and it cost at least twenty times more than the cheapest correct single answer. What it did do: on the arithmetic task, two models that were wrong alone were right after reading the others. So it can pull a weak answer up. It didn't lift the best one. This doesn't show that multi-model review fails in general; it would take a larger test with independently written keys to say that.
 
 **23. Then why use several models at all?**
 On that evidence, mostly you shouldn't, if you know which model is best for the job. Where it helped was catching a weaker model's mistakes when I didn't know in advance which model would be weak. That is a much smaller claim than "more AIs are better".
@@ -156,10 +156,10 @@ No keys, addresses or account names. Every public file was scanned, and I'd want
 ## Why it matters, or doesn't
 
 **48. What makes this different?**
-Possibly nothing. Approval gates for AI agents exist as products and open-source projects, some with passkeys. Multi-model panels exist and have been studied. What may be different is small: one gate shared by assistants from several vendors, run by one non-programmer, with the failures published.
+Nothing in the architecture. In plain words this is an unaudited human-approval gate demo with no executor yet, plus a small multi-model test harness. Approval gates for AI agents exist as products and open-source projects, some with passkeys. Multi-model panels exist and have been studied. What may be mine is small: one gate shared by assistants from several vendors, run by one non-programmer, with the failures published. A combination of my own is not a new capability.
 
 **49. Doesn't this already exist?**
-Probably, in better form. If you know the closest thing, please name it. I'll link it and compare honestly.
+Yes. The closest existing things I've been pointed to, and have not compared in detail: for the gate, human-in-the-loop approval for AI agents, such as LangGraph's interrupt-and-approve pattern, AutoGen's human approval, OpenAI's "require approval" setting for tools, HumanLayer, AgentAuth, and the approval steps in n8n and Zapier. For the test script, LLM-as-judge panels, ensembles, model debate and "Mixture of Agents". Those names came from AI assistants I asked to criticise this page, so check them yourself. If you know a closer one, please name it and I'll link it.
 
 **50. Why should anyone care?**
 Maybe they shouldn't. If there's a reason, it's one of these: the honest test result about multi-model panels, the list of what broke when one person ran this for a month, or the idea of trade-specific scored tasks for checking AI tools.
