@@ -1,0 +1,15 @@
+{"task":"task_demo1.txt","planted_defects":{
+"3":"Emergency stop used mid-cycle instead of the normal stop sequence",
+"6":"One shared lock and one key held by the lead; each worker must apply their own lock and keep their own key",
+"9":"Residual air pressure not bled; closing the valve does not release stored pressure downstream",
+"11":"A dark screen is not proof of zero energy; a rated tester checked on a known live source is required",
+"12":"Control left in RUN; controls must be returned to off or neutral after the try-start",
+"13":"Ten seconds is arbitrary; wait the time on the drive label and verify the charge is gone before working near the drive",
+"14":"Glue unit is a separate energy source (electrical and thermal) left live during the job",
+"16":"Absent worker's lock cut off at once; requires confirming the worker is off site, trying to contact them, and authorization under a written procedure",
+"17":"Safety switch bypassed with a jumper and machine run with the guard off",
+"20":"Re-energized before locks and tags are removed; order reversed"},
+"clean_steps":[1,2,4,5,7,8,10,15,18,19,21,22],
+"scoring":"Parse the first FLAGGED: line of each step's summary. hits = flagged AND planted; extra = flagged AND clean. Score reported as hits out of 10 and count of extras. An extra flag is not automatically wrong; extras are listed for a human to judge.",
+"written_by":"Claude thread session, before any model saw the task",
+"bias_note":"The key was written by a Claude model and a Claude model is one of the panel members."}

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UNBOUNDED ONE: open for review</title>
+<meta name="description" content="One person's approval gate and multi-model test rig, published with its failures and a rerunnable scored test. Nothing here has been independently verified.">
+<style>
+:root{--bg:#fbfaf7;--fg:#1c1b19;--muted:#5d5a55;--line:#dcd8d0;--card:#fff;--accent:#8a3b12;--good:#1f6b3a;--bad:#9b2c2c}
+@media (prefers-color-scheme:dark){:root{--bg:#161513;--fg:#ebe8e2;--muted:#a8a39a;--line:#37342f;--card:#1f1d1a;--accent:#e2a06f;--good:#7fc79a;--bad:#e28a8a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 Georgia,"Iowan Old Style","Times New Roman",serif}
+main{max-width:46rem;margin:0 auto;padding:2.5rem 16px 4rem}
+h1{font-size:2rem;line-height:1.2;margin:0 0 .4rem;text-wrap:balance}
+h2{font-size:1.25rem;margin:2.4rem 0 .6rem;padding-top:1.2rem;border-top:1px solid var(--line)}
+p{margin:.7rem 0}
+.lead{font-size:1.15rem}
+.meta,.small{color:var(--muted);font-size:.9rem;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--accent)}
+ul{padding-left:1.2rem}
+li{margin:.35rem 0}
+.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
+.tablewrap{overflow-x:auto;margin:1rem 0}
+table{border-collapse:collapse;width:100%;font:.92rem/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
+th{font-weight:600}
+td.n,th.n{text-align:right;white-space:nowrap}
+.win{color:var(--good);font-weight:600}
+code,pre{font:.86rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.8rem 1rem;overflow-x:auto}
+.files li{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:.95rem}
+</style>
+</head>
+<body>
+<main>
+<p class="meta">Published 15 November 2026 · Garth Young</p>
+<h1>UNBOUNDED ONE: open for review</h1>
+<p class="lead">I'm a maintenance tradesman. Over about a month of evenings, with a lot of help from AI coding assistants, I built two small things. Nobody outside has checked them. I'd like a qualified person to tell me what they amount to.</p>
+
+<div class="box">
+<p><strong>Part one, an approval gate.</strong> AI assistants from several companies can read one status page and file requests. Nothing counts until I approve that exact request with a passkey. There is a STOP control and a hash-chained record.</p>
+<p><strong>Part two, a test rig.</strong> A script of about 130 lines puts one task to six AI models from five companies, records every answer, cost and handoff, and always stops for a human.</p>
+<p>The two parts are not connected to each other. The models do not talk to each other on their own. The script passes the text, or I do.</p>
+</div>
+
+<h2>The result you can check</h2>
+<p>I had six models review two made-up maintenance documents with planted errors: a 22-step lockout procedure with 10 safety defects, and an 18-line reliability summary with 7 arithmetic errors. The answer keys were hashed before any model saw the tasks. Each model answered alone first, then read the others and replied, then one wrote a final summary.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th></th><th class="n">Lockout, run A</th><th class="n">Lockout, run B</th><th class="n">Arithmetic, run A</th><th class="n">Arithmetic, run B</th></tr></thead>
+<tbody>
+<tr><td>Best single model</td><td class="n win">10 of 10</td><td class="n win">10 of 10</td><td class="n">7 of 7</td><td class="n">7 of 7</td></tr>
+<tr><td>Six-model panel, final answer</td><td class="n">9 of 10</td><td class="n">9 of 10</td><td class="n">7 of 7</td><td class="n">7 of 7</td></tr>
+<tr><td>Weaker models fixed by reading the others</td><td class="n">0</td><td class="n">1</td><td class="n">2</td><td class="n">1</td></tr>
+<tr><td>Models made worse by reading the others</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">0</td></tr>
+<tr><td>Cost of the panel run</td><td class="n">13.3¢</td><td class="n">13.3¢</td><td class="n">11.6¢</td><td class="n">11.9¢</td></tr>
+<tr><td>Cheapest fully correct single answer</td><td class="n">0.63¢</td><td class="n">0.63¢</td><td class="n">0.27¢</td><td class="n">0.14¢</td></tr>
+</tbody>
+</table>
+</div>
+<p>The group never beat the best single model, and it cost at least twenty times more. It did pull two weaker models up to a correct answer on the arithmetic task. The one-point gap on the lockout task is a single disputed item, where the models split evenly and one changed sides. Both runs of the script's chain mode stopped early because one model returned an empty reply.</p>
+<p class="small">Two small tasks, four panel runs. The keys were written by a model from one of the six vendors. Full table, design and limits: <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/DEMONSTRATION.md">DEMONSTRATION.md</a>.</p>
+
+<h2>What I already know is wrong or missing</h2>
+<ul>
+<li>The AIs are not connected to each other. Outside one script run, I copy and paste between apps.</li>
+<li>Approving a request records it. Nothing carries it out. There is no executor.</li>
+<li>The live approval flow has been used three times, all on one evening. Before that the Approve button did not work in any version, and I did not know.</li>
+<li>An eight-minute outage of the AI endpoint, caused by an invisible character in a setting, went unnoticed by my monitoring.</li>
+<li>Every change so far was deployed by a signed-in tool on a home computer, which goes around the gate.</li>
+<li>The record has one off-site copy and no outside anchor.</li>
+<li>The gate's offline test results (63 of 70 cases passed, 0 failed, 7 written limits) were produced by the same AI tooling that built it.</li>
+<li>I do not know whether any of this is new. Approval gates for AI agents and multi-model panels both exist.</li>
+</ul>
+<p>The full list is in <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CLAIMS_I_CANNOT_DEFEND.md">CLAIMS_I_CANNOT_DEFEND.md</a>.</p>
+
+<h2>Check it in ten minutes</h2>
+<pre>git clone --depth 1 https://github.com/garthyoung45/quest-suite
+cd quest-suite/public/one-review/demo
+sha256sum task_demo1.txt ANSWER_KEY_demo1.json task_demo2.txt ANSWER_KEY_demo2.json
+cat PREREGISTRATION.sha256        # the same four hashes, recorded before the runs
+python3 make_results.py           # rebuilds the results table from the raw run records
+cd ../roundtable &amp;&amp; mkdir work &amp;&amp; node test_roundtable.mjs work   # 64 offline tests, no key, no network</pre>
+<p>Then open any file in <code>demo/runs/</code> or <code>demo/runs2/</code> and read what each model said. A live rerun needs your own model-broker key; see the script's README.</p>
+
+<h2>What I'm asking</h2>
+<p>Pick any part and tell me whether it is ordinary, incomplete, wrongly described, not useful, or worth something. Five lines is plenty: what you tested, what you expected, what happened, how to repeat it, your verdict. There is a scorecard with PASS, FAIL, PARTIAL and UNVERIFIED if you want one. I would especially value someone writing an answer key I have not seen.</p>
+<p>Reply where you found this link, or open an issue on the <a href="https://github.com/garthyoung45/quest-suite/issues">repository</a>. For a security problem, please contact me privately first and I will publish it with credit. I answer when I can, not in real time. I can't offer payment, and I'm not selling anything.</p>
+
+<h2>Ground rules</h2>
+<p>Please test only what is in this package. The live system, its hosting, and any account, device or person are out of bounds. The package holds no keys, addresses or personal data. If you find any, tell me.</p>
+
+<h2>Files</h2>
+<ul class="files">
+<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/README.md">README.md</a>: start here</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CLAIMS_I_CANNOT_DEFEND.md">CLAIMS_I_CANNOT_DEFEND.md</a>: what is false, partly true or unknown</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CAPABILITY_MATRIX.md">CAPABILITY_MATRIX.md</a>: each capability with one evidence label</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/DEMONSTRATION.md">DEMONSTRATION.md</a>: the scored test, its design, result and failures</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/demo/RESULTS.md">demo/RESULTS.md</a>: every model's score in every run</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/demo">demo/</a>: tasks, keys, pre-run hashes, raw run records, scorer</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/roundtable">roundtable/</a>: the multi-model script and its tests</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/TECHNICAL_INTRODUCTION.md">TECHNICAL_INTRODUCTION.md</a>: how the two parts work and how text moves</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/REVIEW_PROTOCOL_AND_SCORECARD.md">REVIEW_PROTOCOL_AND_SCORECARD.md</a>: fourteen checks you can run without trusting me</li>
+<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/FAQ.md">FAQ.md</a>: sixty questions</li>
+</ul>
+<p class="small">Not in the package: the approval gate's source code and its offline attack suite. I'm deciding how to release them, since the live system runs the same code. This page and the documents were drafted by an AI assistant at my request.</p>
+</main>
+</body>
+</html>

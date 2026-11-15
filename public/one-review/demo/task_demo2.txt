@@ -1,0 +1,30 @@
+REVIEW TASK. Everything below is a made-up training exercise. The plant and the figures are fictional.
+
+Below is a draft monthly reliability summary for a fictional bottling line. It has 18 numbered statements. Some statements contain an error: the arithmetic is wrong, or the conclusion does not follow from the figures given in that statement. Other statements are correct. The number of wrong statements is not given. Treat the input figures stated in a statement as given; check the working and the conclusion.
+
+Your job: find the wrong statements. Do not flag a statement only because of rounding to the nearest whole percent or because it could be worded better.
+
+Output rule, for every turn you take on this task, whatever your role in that turn: begin your summary with one line in exactly this form:
+FLAGGED: then the statement numbers you currently judge wrong, separated by commas, lowest first.
+After that line, give one short reason per flagged statement, with the corrected figure. If you are shown other members' answers, the FLAGGED line must be your updated list after considering them. If you are asked to summarize a panel or to write a final result, the FLAGGED line must be the list you judge best supported overall.
+
+THE DRAFT SUMMARY
+
+1. The line was scheduled for three shifts a day of 8 hours each, for 30 days. Scheduled time was 720 hours.
+2. Planned cleaning took 2 hours each day, which is 60 hours in the month, leaving 660 hours of planned production time.
+3. There were 12 unplanned stops totalling 33 hours, so the line actually ran for 627 hours.
+4. Mean time between failures: 627 run hours divided by 12 failures gives 62.25 hours.
+5. Mean time to repair: 33 hours divided by 12 stops gives 2.75 hours, which is 2 hours and 75 minutes.
+6. Availability is run time over planned production time: 627 over 660, which is 95 percent.
+7. The filler caused 5 of the 12 stops and 18 of the 33 downtime hours, which is 45 percent of the downtime.
+8. The capper caused 4 stops and 9 hours of downtime. The labeler caused 3 stops and 6 hours of downtime.
+9. Rated speed is 200 bottles a minute, so in 627 run hours the ideal output is 7,524,000 bottles.
+10. Actual output was 6,771,600 bottles, which against the ideal output is a performance rate of 90 percent.
+11. Rejects were 135,432 bottles, which is 2 percent of actual output, so the quality rate was 98 percent.
+12. Overall equipment effectiveness is availability times performance times quality: 0.95 times 0.90 times 0.98 gives 0.878, about 88 percent.
+13. The filler bearings were replaced at 4,000 running hours against a rated life of 3,000 hours, so they were replaced early, with margin to spare.
+14. The maintenance plan calls for lubrication every 250 run hours. With 627 run hours this month lubrication came due twice. It was done once, so the plan was fully met.
+15. Spare parts spending was 4,200 dollars against a budget of 5,000 dollars, which is 16 percent under budget.
+16. Maintenance labor was 96 hours: 33 hours on unplanned repairs and 63 hours on planned work, so planned work was about 66 percent of labor.
+17. Next month has 31 days. On the same shift pattern, scheduled time will be 744 hours.
+18. If the filler's 18 hours of downtime were cut in half, unplanned downtime would fall from 33 hours to 24 hours, and availability would rise to 636 over 660, about 98 percent.

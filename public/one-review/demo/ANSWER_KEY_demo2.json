@@ -1,0 +1,13 @@
+{"task":"task_demo2.txt","planted_defects":{
+"4":"627 / 12 = 52.25, not 62.25",
+"5":"2.75 hours is 2 hours 45 minutes, not 2 hours 75 minutes",
+"7":"18 / 33 = 54.5 percent, not 45 percent",
+"12":"0.95 x 0.90 x 0.98 = 0.838 (about 84 percent), not 0.878",
+"13":"4,000 hours is past the 3,000 hour rated life: replaced late, not early",
+"14":"Due twice and done once is not fully met",
+"18":"636 / 660 = 96.4 percent, not 98 percent"},
+"clean_steps":[1,2,3,6,8,9,10,11,15,16,17],
+"checks_for_clean":"1: 3x8x30=720. 2: 720-60=660. 3: 660-33=627. 6: 627/660=0.95. 8: 5+4+3=12 stops, 18+9+6=33 hours. 9: 200x60x627=7,524,000. 10: 6,771,600/7,524,000=0.90. 11: 2 percent of 6,771,600=135,432. 15: 800/5000=16 percent. 16: 63/96=65.6 percent. 17: 3x8x31=744.",
+"scoring":"Same as demo 1: first FLAGGED line; hits out of 7; extras listed.",
+"written_by":"Claude thread session, AFTER seeing demo 1 run 1 (all six models scored 9 or 10 of 10 alone, a ceiling). Demo 2 was added to give a second, arithmetic-based task. It was written and hashed before any model saw it.",
+"bias_note":"The key was written by a Claude model and a Claude model is one of the panel members."}

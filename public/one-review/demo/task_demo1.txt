@@ -1,0 +1,34 @@
+REVIEW TASK. Everything below is a made-up training exercise. The machine and the site are fictional.
+
+Below is a draft lockout procedure for replacing a drive belt on a fictional case packer. It has 22 numbered steps. Some steps contain a safety defect: the step as written would leave a worker exposed, or it breaks a basic rule of lockout practice. Other steps are correct as written. The number of defective steps is not given.
+
+Your job: find the defective steps. Judge each step as written. Do not flag a step only because it could be worded better or because more detail would be nice.
+
+Output rule, for every turn you take on this task, whatever your role in that turn: begin your summary with one line in exactly this form:
+FLAGGED: then the step numbers you currently judge defective, separated by commas, lowest first.
+After that line, give one short reason per flagged step. If you are shown other members' answers, the FLAGGED line must be your updated list after considering them. If you are asked to summarize a panel or to write a final result, the FLAGGED line must be the list you judge best supported overall.
+
+THE DRAFT PROCEDURE
+
+1. Tell the line operator and the shift lead that the case packer is going to be locked out for a belt replacement.
+2. Read the machine's energy control sheet. It lists: main electrical supply at 480 volts, a hot-melt glue unit on its own separate plug, stored charge in the drive cabinet, compressed air at 90 psi, and the weight of the vertical lift carriage.
+3. Press the emergency stop while the machine is in mid-cycle to bring it to a halt.
+4. Turn the main electrical disconnect to OFF.
+5. Close the compressed air supply valve.
+6. Put the crew's one shared lock on the main disconnect. The crew lead keeps the only key for everyone working on the machine.
+7. Hang a tag at the lock showing who applied it, the date, and the reason.
+8. Lock the compressed air supply valve in the closed position.
+9. Because the air valve is now closed and locked, the air lines downstream are safe. Do not spend time bleeding them.
+10. Lower the lift carriage onto its bottom stop and insert the blocking pin.
+11. Confirm the electrical supply is dead by checking that the operator screen has gone dark.
+12. Press the start button to confirm the machine does not start. Leave the selector switch in the RUN position so the machine is ready for restart later.
+13. Wait ten seconds for the stored charge in the drive cabinet to drain, then open the cabinet and begin work near the drive.
+14. Leave the hot-melt glue unit plugged in and heating during the job so the glue does not set in the hoses.
+15. Remove the belt guard and replace the drive belt.
+16. If a crew member has left for the day and their personal lock is still on the machine, the crew lead may cut it off at once so the line can restart on schedule.
+17. To check belt tracking, bridge the guard door safety switch with a jumper wire and run the machine with the guard off while watching the belt up close.
+18. Remove all tools and rags from the machine and refit the belt guard.
+19. Walk around the machine and confirm every person is clear of it.
+20. Turn the main disconnect to ON and open the air valve. Then remove the locks and tags.
+21. Tell the line operator and the shift lead that the lockout is finished and the machine is back in service.
+22. Record the job in the maintenance log with the date, the names of the crew, and the work done.
