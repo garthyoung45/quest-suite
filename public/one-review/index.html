@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ONE: the AI asks, you decide</title>
-<meta name="description" content="ONE is a gate between AI assistants and your life. An AI can ask. Only your fingerprint says yes. One button stops everything. Unaudited demo, open for review.">
+<meta name="description" content="ONE is an approval gate for AI assistants. An AI can ask. Only the owner's fingerprint says yes. One button stops every AI at the gate. Unaudited demo, open for review.">
 <meta property="og:title" content="ONE: the AI asks. You decide.">
-<meta property="og:description" content="A gate between AI assistants and your life, built by a maintenance technician. Try it in your browser. Unaudited, open for review.">
+<meta property="og:description" content="An approval gate for AI assistants, built by a maintenance technician. Try it in your browser. Unaudited, open for review.">
 <meta name="theme-color" content="#07090d">
 <style>
 :root{
@@ -165,8 +165,8 @@ footer{color:var(--dim);font-size:13.5px;padding:30px 0 50px;border-top:1px soli
 
 <header class="hero wrap">
   <div class="brand"><span class="dot"></span><b>ONE</b> · UNBOUNDED WHAT</div>
-  <h1><span class="a">The AI asks.</span><br><span class="y">You decide.</span><br>One button stops it all.</h1>
-  <p class="sub">ONE is a gate between AI assistants and your life. Any connected AI can ask for something. Nothing it asks for counts until you approve it with your fingerprint. Press STOP and every AI is locked out.</p>
+  <h1><span class="a">The AI asks.</span><br><span class="y">You decide.</span><br>One button stops them.</h1>
+  <p class="sub">ONE is an approval gate for AI assistants. Any connected AI can ask for something through it. Nothing it asks for counts until you approve it with your fingerprint. Press STOP and every AI is shut out of ONE.</p>
   <div class="cta">
     <a class="btn pri" href="#try">Try it now ↓</a>
     <a class="btn ghost" href="#live">Watch it live</a>
@@ -239,7 +239,7 @@ footer{color:var(--dim);font-size:13.5px;padding:30px 0 50px;border-top:1px soli
   <div class="rules">
     <div class="rule"><div class="k" style="color:var(--ai)">AIs ask</div><p>A connected AI can read the status and, with the right key, file a request. That is all it can do. It cannot approve, change rules, or touch anything.</p></div>
     <div class="rule"><div class="k" style="color:var(--you)">You approve</div><p>Only your passkey says yes. Each approval is for one exact request, works once, and is written into a sealed record.</p></div>
-    <div class="rule"><div class="k" style="color:var(--stop)">STOP wins</div><p>One button freezes everything new and cancels every waiting request. Undoing it needs your passkey.</p></div>
+    <div class="rule"><div class="k" style="color:var(--stop)">STOP wins</div><p>One button freezes everything new in ONE and cancels every waiting request. Undoing it needs your passkey. It only covers ONE: an AI working outside ONE is not stopped by it.</p></div>
   </div>
 </section>
 
@@ -247,7 +247,7 @@ footer{color:var(--dim);font-size:13.5px;padding:30px 0 50px;border-top:1px soli
   <h2>What has really happened</h2>
   <div class="facts">
     <div class="fact"><div class="v">8</div><div class="l">AI keys for 7 assistants (ChatGPT, Claude, Gemini, Grok, Le Chat, Perplexity, Manus)</div></div>
-    <div class="fact"><div class="v">3</div><div class="l">real AI requests approved with a passkey, 14 Nov 2026 (the first ever)</div></div>
+    <div class="fact"><div class="v">4</div><div class="l">real AI requests approved with a passkey, 14 and 15 Nov 2026 (one is in the video)</div></div>
     <div class="fact"><div class="v">63 / 70</div><div class="l">scripted attacks held in offline tests; 7 limits written down; graded by me, not an outsider</div></div>
     <div class="fact"><div class="v">0</div><div class="l">outside people who have checked any of it. That's why this page exists.</div></div>
   </div>
@@ -314,6 +314,7 @@ footer{color:var(--dim);font-size:13.5px;padding:30px 0 50px;border-top:1px soli
   <details><summary>What's broken or missing</summary><div class="dbody">
     <ul>
       <li>No executor: approved requests are not carried out.</li>
+      <li>Code changes go around the gate: whoever can deploy ONE can change it without any passkey approval.</li>
       <li>No independent review of anything.</li>
       <li>ONE's own phone alerts are unreliable; I check the app.</li>
       <li>The hourly health check cannot see the AI door.</li>
@@ -392,7 +393,7 @@ function drawQ(){const q=$('queue');q.innerHTML='';const w=waiting().length;$('w
   if(r.st==='WAITING'){const row=document.createElement('div');row.className='row';const a=document.createElement('button');a.className='approve';a.textContent='Approve';a.onclick=()=>openSheet(r);const n=document.createElement('button');n.className='deny';n.textContent='Deny';n.onclick=()=>deny(r);row.append(a,n);d.appendChild(row);}
   q.appendChild(d);} }
 
-function setStop(){$('youPanel').classList.toggle('frozen',S.stopped);$('stopState').innerHTML=S.stopped?'<b>STOPPED.</b> Every AI is locked out.':'<b>Running.</b> AIs may ask.';$('resume').hidden=!S.stopped;$('stop').hidden=S.stopped;}
+function setStop(){$('youPanel').classList.toggle('frozen',S.stopped);$('stopState').innerHTML=S.stopped?'<b>STOPPED.</b> Every AI is shut out of ONE.':'<b>Running.</b> AIs may ask.';$('resume').hidden=!S.stopped;$('stop').hidden=S.stopped;}
 
 async function ask(quiet){
  S.ai++;
