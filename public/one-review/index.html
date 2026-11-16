@@ -172,6 +172,7 @@ footer{color:var(--dim);font-size:13.5px;padding:30px 0 50px;border-top:1px soli
     <a class="btn ghost" href="#live">Watch it live</a>
   </div>
   <p style="margin:10px 0 0"><span class="tag">Unaudited · open for review</span></p>
+  <p style="margin:12px 0 0;color:var(--muted);font-size:15px;max-width:40rem"><b style="color:var(--fg)">What it can't do:</b> STOP only covers ONE. An AI that never goes through ONE isn't stopped by it, and approving a request doesn't carry it out.</p>
 </header>
 
 <section id="try" class="wrap">
@@ -218,12 +219,9 @@ footer{color:var(--dim);font-size:13.5px;padding:30px 0 50px;border-top:1px soli
   <h2>Not a mock-up. Here it is working.</h2>
   <p class="lede">My real phone, 15 November 2026. An AI assistant files a real request through ONE's AI door. It lands in my app, in the AI's own words. I approve it with my fingerprint. Then STOP: AI calls refused, the waiting request cancelled, and lifting STOP takes my passkey. Private parts of the screen are blurred.</p>
   <div class="video" id="vbox">
-    <video id="vid" controls playsinline muted preload="metadata" src="one-live.mp4"></video>
-    <div class="vph" id="vph" hidden>
-      <div class="big">Live recording goes here</div>
-      <p>Two minutes, one take, on a phone. Until it is posted, the simulation above follows the same steps.</p>
-    </div>
+    <video id="vid" controls playsinline muted preload="metadata" poster="poster.jpg" src="one-live.mp4"></video>
   </div>
+  <p style="text-align:center;margin:10px 0 0;font-size:14px"><a href="one-live.mp4">Open the 45-second video (MP4)</a></p>
   <ol class="steps-real">
     <li>An AI assistant reads the owner's rules, then files a request. It gets back only a receipt number.</li>
     <li>The request appears on the owner's phone, in the AI's own words.</li>
@@ -248,7 +246,7 @@ footer{color:var(--dim);font-size:13.5px;padding:30px 0 50px;border-top:1px soli
   <div class="facts">
     <div class="fact"><div class="v">8</div><div class="l">AI keys for 7 assistants (ChatGPT, Claude, Gemini, Grok, Le Chat, Perplexity, Manus)</div></div>
     <div class="fact"><div class="v">4</div><div class="l">real AI requests approved with a passkey, 14 and 15 Nov 2026 (one is in the video)</div></div>
-    <div class="fact"><div class="v">63 / 70</div><div class="l">scripted attacks held in offline tests; 7 limits written down; graded by me, not an outsider</div></div>
+    <div class="fact"><div class="v">63 / 70 <span style="font-size:14px;font-weight:600;color:var(--warn)">self-graded</span></div><div class="l">scripted attacks held in offline tests that I ran and graded myself; 7 limits written down</div></div>
     <div class="fact"><div class="v">0</div><div class="l">outside people who have checked any of it. That's why this page exists.</div></div>
   </div>
 </section>
@@ -448,10 +446,6 @@ $('verify').onclick=async()=>{const b=await verify();const v=$('verdict');if(!S.
 $('tamper').onclick=async()=>{if(S.log.length<2){toast('Make a few moves first.');return;}const e=S.log[0];e.ev=e.ev.replace(/DENIED|REFUSED|filed/,'APPROVED');if(!/APPROVED/.test(e.ev))e.ev+=' (edited: APPROVED)';drawLog();const v=$('verdict');v.className='verdict no';v.textContent='Line #1 was quietly changed. Now tap "Check the record".';};
 $('reset').onclick=()=>{fresh();$('chat').innerHTML='';$('verdict').className='verdict';setStop();drawQ();drawLog();say('ai','Hi. I\'m an AI assistant connected to ONE. I can ask. I can\'t decide.');};
 
-/* video fallback */
-const vid=$('vid');const fb=()=>{vid.hidden=true;$('vph').hidden=false;};
-vid.addEventListener('error',fb);vid.querySelector&&0;setTimeout(()=>{if(vid.readyState===0&&vid.networkState===3)fb();},2500);
-fetch('one-live.mp4',{method:'HEAD'}).then(r=>{if(!r.ok)fb();}).catch(fb);
 
 $('reset').click();
 })();
