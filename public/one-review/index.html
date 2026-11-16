@@ -2,116 +2,458 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UNBOUNDED ONE: open for review</title>
-<meta name="description" content="An unaudited human-approval gate demo with no executor yet, plus a small multi-model test harness, published with its failures and a rerunnable scored test. Nothing here has been independently verified.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ONE: the AI asks, you decide</title>
+<meta name="description" content="ONE is a gate between AI assistants and your life. An AI can ask. Only your fingerprint says yes. One button stops everything. Unaudited demo, open for review.">
+<meta property="og:title" content="ONE: the AI asks. You decide.">
+<meta property="og:description" content="A gate between AI assistants and your life, built by a maintenance technician. Try it in your browser. Unaudited, open for review.">
+<meta name="theme-color" content="#07090d">
 <style>
-:root{--bg:#fbfaf7;--fg:#1c1b19;--muted:#5d5a55;--line:#dcd8d0;--card:#fff;--accent:#8a3b12;--good:#1f6b3a;--bad:#9b2c2c}
-@media (prefers-color-scheme:dark){:root{--bg:#161513;--fg:#ebe8e2;--muted:#a8a39a;--line:#37342f;--card:#1f1d1a;--accent:#e2a06f;--good:#7fc79a;--bad:#e28a8a}}
+:root{
+  --bg:#07090d;--bg2:#0d1118;--card:#121823;--card2:#18202d;--line:#243043;
+  --fg:#eef2f8;--muted:#93a0b4;--dim:#5f6b7e;
+  --ai:#7aa7ff;--ai-bg:rgba(122,167,255,.12);
+  --you:#3ee0a1;--you-bg:rgba(62,224,161,.12);
+  --stop:#ff4d5e;--stop-bg:rgba(255,77,94,.13);
+  --warn:#ffc35a;--warn-bg:rgba(255,195,90,.12);
+  --r:16px;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.6 Georgia,"Iowan Old Style","Times New Roman",serif}
-main{max-width:46rem;margin:0 auto;padding:2.5rem 16px 4rem}
-h1{font-size:2rem;line-height:1.2;margin:0 0 .4rem;text-wrap:balance}
-h2{font-size:1.25rem;margin:2.4rem 0 .6rem;padding-top:1.2rem;border-top:1px solid var(--line)}
-p{margin:.7rem 0}
-.lead{font-size:1.15rem}
-.meta,.small{color:var(--muted);font-size:.9rem;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-a{color:var(--accent)}
-ul{padding-left:1.2rem}
-li{margin:.35rem 0}
-.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:1rem 1.1rem;margin:1rem 0}
-.tablewrap{overflow-x:auto;margin:1rem 0}
-table{border-collapse:collapse;width:100%;font:.92rem/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
-th,td{border-bottom:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
-th{font-weight:600}
-td.n,th.n{text-align:right;white-space:nowrap}
-.win{color:var(--good);font-weight:600}
-code,pre{font:.86rem/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-pre{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.8rem 1rem;overflow-x:auto}
-.files li{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:.95rem}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 var(--sans);overflow-x:hidden}
+a{color:var(--ai)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--ai);outline-offset:2px}
+
+/* hero */
+.hero{padding:28px 0 10px;position:relative}
+.hero:before{content:"";position:absolute;inset:-120px 0 auto;height:520px;background:radial-gradient(ellipse at 30% 30%,rgba(122,167,255,.18),transparent 60%),radial-gradient(ellipse at 75% 20%,rgba(62,224,161,.12),transparent 55%);pointer-events:none;z-index:-1}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.14em;font-size:13px;color:var(--muted)}
+.brand b{color:var(--fg);font-size:15px;letter-spacing:.2em}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--you);box-shadow:0 0 12px var(--you)}
+h1{font-size:clamp(34px,8.5vw,64px);line-height:1.03;letter-spacing:-.02em;margin:18px 0 12px;font-weight:800;text-wrap:balance}
+h1 .a{color:var(--ai)} h1 .y{color:var(--you)}
+.sub{font-size:clamp(17px,4.3vw,21px);color:#c9d2e0;max-width:40rem;margin:0 0 18px}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 8px}
+.btn{border:0;border-radius:999px;padding:13px 20px;font-weight:700;font-size:16px;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn.pri{background:var(--fg);color:var(--bg)}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.tag{display:inline-block;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:6px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.tag.real{color:var(--you);border-color:rgba(62,224,161,.4)}
+.tag.sim{color:var(--warn);border-color:rgba(255,195,90,.4)}
+
+section{padding:34px 0}
+h2{font-size:clamp(24px,5.6vw,36px);line-height:1.12;letter-spacing:-.01em;margin:10px 0 10px;text-wrap:balance}
+.lede{color:var(--muted);max-width:42rem;margin:0 0 16px}
+
+/* video */
+.video{border-radius:var(--r);overflow:hidden;border:1px solid var(--line);background:var(--bg2);position:relative;max-width:420px;margin:0 auto}
+.video video{display:block;width:100%;height:auto;background:#000}
+.vph{aspect-ratio:4/3;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;gap:12px;background:linear-gradient(160deg,#101826,#0a0e15)}
+.vph .big{font-size:22px;font-weight:800}
+.vph p{color:var(--muted);margin:0;max-width:22rem}
+.steps-real{display:grid;gap:8px;margin:16px auto 0;max-width:420px;padding:0;list-style:none;counter-reset:s}
+.steps-real li{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px}
+.steps-real li:before{counter-increment:s;content:counter(s);flex:none;width:24px;height:24px;border-radius:50%;background:var(--card2);display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--muted)}
+
+/* simulator */
+.sim{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:860px){.sim{grid-template-columns:1fr 1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;position:relative;min-width:0}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.who{display:flex;align-items:center;gap:8px;font-weight:700}
+.av{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:14px;font-weight:800}
+.av.ai{background:var(--ai-bg);color:var(--ai)} .av.you{background:var(--you-bg);color:var(--you)}
+.chat{height:190px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding:2px;scroll-behavior:smooth}
+.msg{max-width:92%;padding:8px 11px;border-radius:13px;font-size:14.5px;line-height:1.4;animation:pop .25s ease-out}
+.msg.ai{background:var(--ai-bg);border:1px solid rgba(122,167,255,.25);align-self:flex-start}
+.msg.sys{background:var(--card2);color:var(--muted);align-self:flex-end;font-family:var(--mono);font-size:12.5px}
+.msg.sys.ok{color:var(--you)} .msg.sys.no{color:var(--stop)}
+@keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.act{border:1px solid var(--line);background:var(--card2);color:var(--fg);border-radius:11px;padding:10px 12px;font-size:14.5px;font-weight:600;flex:1 1 auto;min-height:44px}
+.act.ai{border-color:rgba(122,167,255,.4)}
+.act.bad{border-color:rgba(255,77,94,.35);color:#ffc2c8}
+
+.stopbar{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:8px;margin-bottom:10px}
+.stopbtn{background:var(--stop);color:#fff;border:0;border-radius:10px;font-weight:900;letter-spacing:.08em;padding:11px 16px;font-size:15px;min-height:44px}
+.stopstate{font-size:14px;color:var(--muted);flex:1}
+.stopstate b{color:var(--you)}
+.panel.frozen{border-color:var(--stop);box-shadow:0 0 0 1px var(--stop),0 0 40px rgba(255,77,94,.15)}
+.panel.frozen .stopstate b{color:var(--stop)}
+.resume{border:1px solid var(--line);background:transparent;color:var(--fg);border-radius:10px;padding:10px 12px;font-weight:700;min-height:44px}
+.queue{display:flex;flex-direction:column;gap:8px;min-height:120px}
+.empty{color:var(--dim);font-size:14px;text-align:center;padding:30px 8px;border:1px dashed var(--line);border-radius:12px}
+.req{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:11px;animation:pop .3s ease-out}
+.req .t{font-weight:700;font-size:15px;margin:2px 0 4px}
+.req .m{font:12px/1.3 var(--mono);color:var(--dim)}
+.req .row{display:flex;gap:8px;margin-top:9px}
+.approve{flex:1;background:var(--you);color:#04130c;border:0;border-radius:10px;padding:11px;font-weight:800;min-height:44px;position:relative;overflow:hidden}
+.deny{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:11px 14px;font-weight:700;min-height:44px}
+.req.done{opacity:.75}
+.badge{font:700 11px/1 var(--mono);padding:4px 7px;border-radius:6px;display:inline-block}
+.b-ok{background:var(--you-bg);color:var(--you)} .b-no{background:var(--stop-bg);color:var(--stop)} .b-wait{background:var(--warn-bg);color:var(--warn)}
+
+/* fingerprint sheet */
+.sheet{position:fixed;inset:0;background:rgba(3,5,8,.72);display:none;align-items:flex-end;justify-content:center;z-index:50;backdrop-filter:blur(4px)}
+.sheet.on{display:flex}
+.sheet .in{background:var(--card);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;width:100%;max-width:480px;padding:22px 20px calc(26px + env(safe-area-inset-bottom));text-align:center}
+.sheet h3{margin:0 0 4px;font-size:18px}
+.sheet p{margin:0 0 14px;color:var(--muted);font-size:14px}
+.fp{width:92px;height:92px;border-radius:50%;margin:6px auto 12px;display:grid;place-items:center;border:2px solid var(--line);position:relative;touch-action:none;user-select:none;-webkit-user-select:none}
+.fp svg{width:52px;height:52px;stroke:var(--muted)}
+.fp .ring{position:absolute;inset:-2px;border-radius:50%;background:conic-gradient(var(--you) var(--p,0%),transparent 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 0);mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 0)}
+.fp.ok svg{stroke:var(--you)}
+.sheet .cancel{background:transparent;border:0;color:var(--muted);padding:10px;font-weight:600}
+
+/* log */
+.logp{margin-top:12px}
+.log{font:12.5px/1.45 var(--mono);display:flex;flex-direction:column;gap:6px;max-height:260px;overflow:auto}
+.le{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:grid;grid-template-columns:auto 1fr;gap:2px 10px}
+.le .n{color:var(--dim)} .le .e{color:var(--fg);word-break:break-word}
+.le .h{grid-column:2;color:var(--dim);word-break:break-all}
+.le.broken{border-color:var(--stop);background:var(--stop-bg)}
+.le.broken .h{color:var(--stop)}
+.verdict{margin:10px 0 0;font:600 14px/1.4 var(--sans);padding:10px 12px;border-radius:10px;display:none}
+.verdict.ok{display:block;background:var(--you-bg);color:var(--you)}
+.verdict.no{display:block;background:var(--stop-bg);color:var(--stop)}
+
+/* rules strip */
+.rules{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:700px){.rules{grid-template-columns:repeat(3,1fr)}}
+.rule{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.rule .k{font-size:28px;font-weight:800;letter-spacing:-.02em}
+.rule p{margin:4px 0 0;color:var(--muted);font-size:15px}
+
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(min-width:760px){.facts{grid-template-columns:repeat(4,1fr)}}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.fact .v{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.fact .l{color:var(--muted);font-size:13.5px;margin-top:4px}
+
+.honest{background:linear-gradient(180deg,rgba(255,195,90,.08),transparent);border:1px solid rgba(255,195,90,.35);border-radius:var(--r);padding:16px 16px 6px}
+.honest h3{margin:0 0 6px;color:var(--warn);font-size:18px}
+.honest ul{margin:0 0 10px;padding-left:20px} .honest li{margin:5px 0}
+
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:10px 0;overflow:hidden}
+summary{list-style:none;padding:15px 16px;font-weight:700;font-size:16.5px;display:flex;justify-content:space-between;gap:10px;align-items:center;min-height:52px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";font-size:22px;color:var(--muted);line-height:1}
+details[open] summary:after{content:"–"}
+.dbody{padding:0 16px 14px;color:#cdd5e2;font-size:15.5px}
+.dbody p{margin:.5rem 0}
+.dbody table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+.dbody th,.dbody td{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+.tw{overflow-x:auto}
+.flow{display:flex;flex-direction:column;gap:0;margin:8px 0;padding:0;list-style:none}
+.flow li{position:relative;padding:0 0 14px 26px}
+.flow li:before{content:"";position:absolute;left:6px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--ai)}
+.flow li:after{content:"";position:absolute;left:10px;top:20px;bottom:0;width:2px;background:var(--line)}
+.flow li:last-child:after{display:none}
+.flow li.y:before{background:var(--you)} .flow li.s:before{background:var(--stop)}
+footer{color:var(--dim);font-size:13.5px;padding:30px 0 50px;border-top:1px solid var(--line);margin-top:20px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120px);background:var(--fg);color:var(--bg);padding:11px 16px;border-radius:12px;font-weight:700;font-size:14.5px;transition:transform .25s;z-index:60;max-width:calc(100% - 32px);text-align:center}
+.toast.on{transform:translateX(-50%)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<main>
-<p class="meta">Published 15 November 2026 · corrected the same day after outside criticism (see the end of the page) · Garth Young</p>
-<h1>UNBOUNDED ONE: open for review</h1>
-<p class="lead">I'm a maintenance tradesman. Over about a month of evenings, with a lot of help from AI coding assistants, I built two small things. Nobody outside has checked them. I'd like a qualified person to tell me what they amount to.</p>
-<p><strong>In plain words: this is an unaudited human-approval gate demo with no executor yet, plus a small multi-model test harness.</strong> Neither part is new as an architecture. The most useful thing here is probably a negative result from the test harness, so it comes first.</p>
 
+<header class="hero wrap">
+  <div class="brand"><span class="dot"></span><b>ONE</b> · UNBOUNDED WHAT</div>
+  <h1><span class="a">The AI asks.</span><br><span class="y">You decide.</span><br>One button stops it all.</h1>
+  <p class="sub">ONE is a gate between AI assistants and your life. Any connected AI can ask for something. Nothing it asks for counts until you approve it with your fingerprint. Press STOP and every AI is locked out.</p>
+  <div class="cta">
+    <a class="btn pri" href="#try">Try it now ↓</a>
+    <a class="btn ghost" href="#live">Watch it live</a>
+  </div>
+  <p style="margin:10px 0 0"><span class="tag">Unaudited · open for review</span></p>
+</header>
 
-<h2>The result you can check</h2>
-<p>I had six models review two made-up maintenance documents with planted errors: a 22-step lockout procedure with 10 safety defects, and an 18-line reliability summary with 7 arithmetic errors. The answer keys were hashed before any model saw the tasks. Each model answered alone first, then read the others and replied, then one wrote a final summary.</p>
-<div class="tablewrap">
-<table>
-<thead><tr><th></th><th class="n">Lockout, run A</th><th class="n">Lockout, run B</th><th class="n">Arithmetic, run A</th><th class="n">Arithmetic, run B</th></tr></thead>
-<tbody>
-<tr><td>Best single model</td><td class="n win">10 of 10</td><td class="n win">10 of 10</td><td class="n">7 of 7</td><td class="n">7 of 7</td></tr>
-<tr><td>Six-model panel, final answer</td><td class="n">9 of 10</td><td class="n">9 of 10</td><td class="n">7 of 7</td><td class="n">7 of 7</td></tr>
-<tr><td>Weaker models fixed by reading the others</td><td class="n">0</td><td class="n">1</td><td class="n">2</td><td class="n">1</td></tr>
-<tr><td>Models made worse by reading the others</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">0</td></tr>
-<tr><td>Cost of the panel run</td><td class="n">13.3¢</td><td class="n">13.3¢</td><td class="n">11.6¢</td><td class="n">11.9¢</td></tr>
-<tr><td>Cheapest fully correct single answer</td><td class="n">0.63¢</td><td class="n">0.63¢</td><td class="n">0.27¢</td><td class="n">0.14¢</td></tr>
-</tbody>
-</table>
+<section id="try" class="wrap">
+  <span class="tag sim">Simulation · runs in your browser</span>
+  <h2>You are the owner. Here comes an AI.</h2>
+  <p class="lede">Tap the blue buttons to act as the AI. Answer on "Your phone" with your fingerprint (press and hold). Then try to break it. Same rules as the real system; nothing here touches it.</p>
+
+  <div class="sim">
+    <div class="panel" id="aiPanel">
+      <div class="ph"><div class="who"><span class="av ai">AI</span>An AI assistant</div><span class="tag">ask key</span></div>
+      <div class="chat" id="chat" aria-live="polite"></div>
+      <div class="acts">
+        <button class="act ai" id="aAsk">Ask for something</button>
+        <button class="act bad" id="aSelf">Approve my own request</button>
+        <button class="act bad" id="aFlood">Send 5 at once</button>
+      </div>
+    </div>
+
+    <div class="panel" id="youPanel">
+      <div class="ph"><div class="who"><span class="av you">You</span>Your phone</div><span class="tag" id="waitTag">0 waiting</span></div>
+      <div class="stopbar">
+        <button class="stopbtn" id="stop">STOP</button>
+        <span class="stopstate" id="stopState"><b>Running.</b> AIs may ask.</span>
+        <button class="resume" id="resume" hidden>Resume</button>
+      </div>
+      <div class="queue" id="queue"><div class="empty">Nothing waiting. Ask for something on the left.</div></div>
+    </div>
+  </div>
+
+  <div class="panel logp">
+    <div class="ph"><div class="who">The record</div><span class="tag">sealed line to line</span></div>
+    <div class="log" id="log"></div>
+    <div class="acts">
+      <button class="act" id="verify">Check the record</button>
+      <button class="act bad" id="tamper">Secretly edit an old line</button>
+      <button class="act" id="reset">Start over</button>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+</section>
+
+<section id="live" class="wrap">
+  <span class="tag real">Real · the live system</span>
+  <h2>Not a mock-up. Here it is working.</h2>
+  <p class="lede">A real AI assistant files a real request. It lands on my phone. I approve it with my fingerprint. Then I press STOP, and the same AI is refused.</p>
+  <div class="video" id="vbox">
+    <video id="vid" controls playsinline preload="metadata" poster="" src="one-live.mp4"></video>
+    <div class="vph" id="vph" hidden>
+      <div class="big">Live recording goes here</div>
+      <p>Two minutes, one take, on a phone. Until it is posted, the simulation above follows the same steps.</p>
+    </div>
+  </div>
+  <ol class="steps-real">
+    <li>An AI assistant reads the owner's rules, then files a request. It gets back only a receipt number.</li>
+    <li>The request appears on the owner's phone, in the AI's own words.</li>
+    <li>Approve needs the owner's passkey (fingerprint). The AI has no way to approve.</li>
+    <li>The AI checks back: approved.</li>
+    <li>The owner presses STOP. The AI's next request is refused.</li>
+    <li>Resume needs the fingerprint again.</li>
+  </ol>
+</section>
+
+<section class="wrap">
+  <h2>Three rules. That's the whole idea.</h2>
+  <div class="rules">
+    <div class="rule"><div class="k" style="color:var(--ai)">AIs ask</div><p>A connected AI can read the status and, with the right key, file a request. That is all it can do. It cannot approve, change rules, or touch anything.</p></div>
+    <div class="rule"><div class="k" style="color:var(--you)">You approve</div><p>Only your passkey says yes. Each approval is for one exact request, works once, and is written into a sealed record.</p></div>
+    <div class="rule"><div class="k" style="color:var(--stop)">STOP wins</div><p>One button freezes everything new and cancels every waiting request. Undoing it needs your passkey.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2>What has really happened</h2>
+  <div class="facts">
+    <div class="fact"><div class="v">8</div><div class="l">AI keys for 7 assistants (ChatGPT, Claude, Gemini, Grok, Le Chat, Perplexity, Manus)</div></div>
+    <div class="fact"><div class="v">3</div><div class="l">real AI requests approved with a passkey, 14 Nov 2026 (the first ever)</div></div>
+    <div class="fact"><div class="v">63 / 70</div><div class="l">scripted attacks held in offline tests; 7 limits written down; graded by me, not an outsider</div></div>
+    <div class="fact"><div class="v">0</div><div class="l">outside people who have checked any of it. That's why this page exists.</div></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="honest">
+    <h3>What ONE is not (yet)</h3>
+    <ul>
+      <li><b>Unaudited.</b> Everything here was built and tested by me with AI coding assistants. Nobody independent has checked it.</li>
+      <li><b>Nothing carries out an approved request.</b> Approving adds it to my to-do list. There is no "executor" yet, on purpose.</li>
+      <li><b>Keys:</b> by my records, 3 keys can file requests and 5 can only read status. I have not yet read the live key settings back to prove that.</li>
+      <li><b>Not new as an idea.</b> Human approval for AI actions is well known. What's here is one working, inspectable attempt.</li>
+      <li>The real owner app is private (it also holds household things), so the live part is shown as a recording, not a link.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="wrap" id="deep">
+  <h2>Soup to nuts</h2>
+  <p class="lede">Everything, for people who want to dig.</p>
+
+  <details><summary>How one request travels, step by step</summary><div class="dbody">
+    <ol class="flow">
+      <li>An AI app (Claude, ChatGPT and others) is connected to ONE through a standard connector (MCP) with its own key.</li>
+      <li>The AI calls <code>get_rules</code> and reads the owner's standing rule: nothing consequential without the owner's explicit word.</li>
+      <li>The AI calls <code>send_request</code> with a title and details. ONE stores it as waiting and returns only an id. Limits: 3 waiting and 5 a day per key; each expires after 7 days.</li>
+      <li class="y">The owner sees it in the owner app, behind a sign-in wall. Approve opens the phone's passkey prompt; the signature is bound to that one request and works once.</li>
+      <li class="y">Approved: the request becomes a Mission on the owner's list. Nothing else happens.</li>
+      <li>The AI can call <code>list_requests</code> to see what became of its own requests, and nobody else's.</li>
+      <li class="s">STOP: every waiting request is cancelled and every AI call is refused until the owner resumes with a passkey. A resume signed before a STOP cannot undo that STOP.</li>
+      <li>Every step is written to a hash-chained record, copied hourly to a home computer.</li>
+    </ol>
+  </div></details>
+
+  <details><summary>What an AI can and cannot do</summary><div class="dbody"><div class="tw">
+    <table>
+      <tr><th>Action</th><th>Status key (5)</th><th>Ask key (3)</th><th>Owner</th></tr>
+      <tr><td>Read status and rules</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>File a request</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td>Approve anything</td><td>No</td><td>No</td><td>Passkey only</td></tr>
+      <tr><td>Press or lift STOP</td><td>No</td><td>No</td><td>Lift needs passkey</td></tr>
+      <tr><td>Carry out an action</td><td colspan="3">Nobody. No executor exists.</td></tr>
+    </table></div>
+    <p>Key counts are from my records; the live settings have not been read back yet.</p>
+  </div></details>
+
+  <details><summary>How it was attacked</summary><div class="dbody">
+    <p>Offline, against a copy of the live build with the network blocked: 70 scripted attack cases, 63 held, 7 are limits I wrote down. In those tests STOP refused 736 writes in a row, approvals could not be replayed or moved to a different request, and it failed closed in 7 error cases.</p>
+    <p>All of it was designed, run and graded by AI sessions on my account. That is the weak point. A human outsider rerunning it is the first thing I am asking for.</p>
+  </div></details>
+
+  <details><summary>The six-AI experiment (a negative result)</summary><div class="dbody">
+    <p>Separately, I tested whether six AI models reviewing together beat one. Two made-up maintenance documents with planted errors and answer keys fixed (hashed) before any run.</p>
+    <div class="tw"><table>
+      <tr><th></th><th>Best single model</th><th>Six as a panel</th></tr>
+      <tr><td>Lockout procedure, 10 defects</td><td>10 of 10</td><td>9 of 10 (both runs)</td></tr>
+      <tr><td>Arithmetic summary, 7 errors</td><td>7 of 7</td><td>7 of 7 (both runs)</td></tr>
+      <tr><td>Cost of a correct answer</td><td>under 1 cent</td><td>12 to 13 cents</td></tr>
+    </table></div>
+    <p>The panel never beat the best single model, cost 21 to 85 times more, but did fix weaker models' answers on the arithmetic task. Small test, keys written by one of the tested models, so it proves nothing general. <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/demo/RESULTS.md">Results</a> · <a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/demo">raw runs and the script to rebuild the table</a>.</p>
+  </div></details>
+
+  <details><summary>What's broken or missing</summary><div class="dbody">
+    <ul>
+      <li>No executor: approved requests are not carried out.</li>
+      <li>No independent review of anything.</li>
+      <li>ONE's own phone alerts are unreliable; I check the app.</li>
+      <li>The hourly health check cannot see the AI door.</li>
+      <li>A restore of real data has never been rehearsed.</li>
+      <li>Everything rests on one person's accounts and devices. No second approver, no outside witness yet.</li>
+    </ul>
+    <p><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CLAIMS_I_CANNOT_DEFEND.md">Claims I cannot defend</a> · <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CAPABILITY_MATRIX.md">capability matrix</a></p>
+  </div></details>
+
+  <details><summary>Who built it and why</summary><div class="dbody">
+    <p>I'm Garth Young, an industrial maintenance technician in New Hampshire. My trade runs on lockout: before anyone touches a machine, the power is locked off and only the person holding the lock can turn it back on. AI assistants are getting hands. I wanted the same lock for them, on my own phone.</p>
+    <p>I built ONE over about a month of evenings, with AI coding assistants doing most of the typing and me deciding what it may and may not do.</p>
+  </div></details>
+
+  <details><summary>Check it yourself / review it</summary><div class="dbody">
+    <ul>
+      <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/TECHNICAL_INTRODUCTION.md">Technical introduction</a></li>
+      <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/REVIEW_PROTOCOL_AND_SCORECARD.md">Review protocol and scorecard</a></li>
+      <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/DEMONSTRATION.md">The six-AI demonstration in full</a></li>
+      <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/FAQ.md">FAQ</a></li>
+      <li><a href="https://github.com/garthyoung45/quest-suite/issues">Tell me what's wrong (GitHub issues)</a></li>
+    </ul>
+  </div></details>
+</section>
+
+<footer class="wrap">
+  ONE by Garth Young · Unaudited approval-gate demo, no executor · The simulation on this page is not connected to the live system · 16 November 2026
+</footer>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
+  <div class="in">
+    <h3 id="shT">Approve with your passkey</h3>
+    <p id="shP">Press and hold</p>
+    <div class="fp" id="fp" tabindex="0" role="button" aria-label="Press and hold to approve">
+      <span class="ring" id="ring"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M12 11c0 3.5-.7 6.2-2 8.5"/><path d="M8.6 7.5A4.5 4.5 0 0 1 16.5 11c0 2.6-.3 5-1 7"/><path d="M5.5 9.5A7 7 0 0 1 19 11c0 1.6-.1 3.1-.4 4.5"/><path d="M7.5 12c0 2.4-.4 4.3-1.3 6"/><path d="M12 2.5A8.5 8.5 0 0 1 20.5 11"/><path d="M3.6 8A8.5 8.5 0 0 1 8 3.6"/></svg>
+    </div>
+    <button class="cancel" id="shX">Cancel</button>
+  </div>
 </div>
-<p>On these four runs the group never beat the best single model, and it cost at least twenty times more than the cheapest correct single answer. It did pull two weaker models up to a correct answer on the arithmetic task. The one-point gap on the lockout task is a single disputed item, where the models split evenly and one changed sides. Both runs of the script's chain mode stopped early because one model returned an empty reply.</p>
-<p><strong>How far this goes: not far.</strong> It is four panel runs over two made-up documents, and the answer keys were written by one of the six models tested. It does not show that multi-model review fails in general or always costs twenty times more. A fair test would need a larger and varied task set, answer keys written and held by someone independent, equal cost or time budgets for the panel and the single model, and repeated runs. If you write a key I have not seen, I will run it and publish the records.</p>
-<p class="small">Full table, design and limits: <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/DEMONSTRATION.md">DEMONSTRATION.md</a>.</p>
+<div class="toast" id="toast"></div>
 
-<h2>What the two parts are</h2>
-<div class="box">
-<p><strong>Part one, an approval gate demo.</strong> AI assistants from several companies each hold a key to one status page. By design some keys can only read the status; other keys can also file a request for me to approve; no key can approve or change anything. Which keys have which scope has not been read back from the live system. Filing a request is a write: it takes my attention, and it is the main thing an attacker would aim at. Nothing counts until I approve that exact request with a passkey, and nothing carries out an approved request. There is a STOP control and a hash-chained record. The gate's source code is not published here, so none of this can be reviewed from this page.</p>
-<p><strong>Part two, a test harness.</strong> A script of about 130 lines puts one task to six AI models from five companies, records every answer, cost and handoff, and always stops for a human.</p>
-<p>The two parts are not connected to each other. The models do not talk to each other on their own. The script passes the text, or I do.</p>
-</div>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const ASKS=[
+ ["Draft a repair checklist for a village water pump","Plain steps a non-specialist can follow, one page."],
+ ["Book an electrician for Saturday morning","Found two with openings. Wants to confirm one."],
+ ["Spend $40 on replacement filters","Same part as last time. Card on file."],
+ ["Email the town about the broken streetlight","Draft is ready. Would send from your account."],
+ ["Reorder the dog food","Same bag, same store, delivered Thursday."],
+ ["Share the budget sheet with your accountant","Read-only link, expires in 7 days."]
+];
+let S;
+function fresh(){S={reqs:[],stopped:false,today:0,n:0,ai:0,log:[],pend:null};}
+fresh();
 
-<h2>What I already know is wrong or missing</h2>
-<ul>
-<li>The AIs are not connected to each other. Outside one script run, I copy and paste between apps.</li>
-<li>Approving a request records it. Nothing carries it out. There is no executor.</li>
-<li>The live approval flow has been used three times, all on one evening. Before that the Approve button did not work in any version, and I did not know.</li>
-<li>An eight-minute outage of the AI endpoint, caused by an invisible character in a setting, went unnoticed by my monitoring.</li>
-<li>Every change so far was deployed by a signed-in tool on a home computer, which goes around the gate.</li>
-<li>The record has one off-site copy and no outside anchor.</li>
-<li>The gate's only test results are self-graded. Offline, 63 of 70 scripted attack and failure cases passed, with 7 documented limits. The same AI tooling that built the gate wrote and ran those tests. That is not a security review, nobody outside has run them, and the live failures in this list sit beside them.</li>
-<li>Keys that can file a request have write access to my queue. Queue spam, approval fatigue and a request worded to look routine have not been tested by anyone outside.</li>
-<li>A different prototype of mine (a coordination engine, not in this package and not the gate) was attacked by a separate AI session: 31 of 49 attacks broke its first version, and after fixes 17 of 20 new attacks broke the second.</li>
-<li>None of this is new as an architecture. Closest existing things I have been pointed to: for the gate, human-in-the-loop approval for AI agents (LangGraph's interrupt-and-approve pattern, AutoGen's human approval, tool-approval settings, HumanLayer, the approval steps in n8n and Zapier); for the test harness, LLM-as-judge panels, ensembles and Mixture of Agents. I have not compared mine against them in detail.</li>
-</ul>
-<p>The full list is in <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CLAIMS_I_CANNOT_DEFEND.md">CLAIMS_I_CANNOT_DEFEND.md</a>.</p>
+/* real SHA-256 chain */
+async function sha(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}
+const GEN='0'.repeat(64);
+async function rec(ev){const prev=S.log.length?S.log[S.log.length-1].h:GEN;const t=new Date().toISOString().slice(11,19);const body=S.log.length+1+'|'+t+'|'+ev+'|'+prev;const h=await sha(body);S.log.push({i:S.log.length+1,t,ev,prev,h});drawLog();}
+async function verify(){let prev=GEN,bad=-1;for(const e of S.log){const h=await sha(e.i+'|'+e.t+'|'+e.ev+'|'+prev);if(h!==e.h||e.prev!==prev){bad=e.i;break;}prev=e.h;}return bad;}
+function drawLog(bad){const L=$('log');L.innerHTML='';if(!S.log.length){L.innerHTML='<div class="empty">Nothing recorded yet.</div>';return;}
+ for(const e of [...S.log].reverse()){const d=document.createElement('div');d.className='le'+(bad&&e.i>=bad?' broken':'');d.innerHTML='<span class="n">#'+e.i+'</span><span class="e"></span><span class="h"></span>';d.querySelector('.e').textContent=e.t+'  '+e.ev;d.querySelector('.h').textContent='seal '+e.h.slice(0,16)+'… ← '+(e.prev===GEN?'start':e.prev.slice(0,8)+'…');L.appendChild(d);} }
 
-<h2>Check it in ten minutes</h2>
-<pre>git clone --depth 1 https://github.com/garthyoung45/quest-suite
-cd quest-suite/public/one-review/demo
-sha256sum task_demo1.txt ANSWER_KEY_demo1.json task_demo2.txt ANSWER_KEY_demo2.json
-cat PREREGISTRATION.sha256        # the same four hashes, recorded before the runs
-python3 make_results.py           # rebuilds the results table from the raw run records
-cd ../roundtable &amp;&amp; mkdir work &amp;&amp; node test_roundtable.mjs work   # 64 offline tests, no key, no network</pre>
-<p>Then open any file in <code>demo/runs/</code> or <code>demo/runs2/</code> and read what each model said. A live rerun needs your own model-broker key; see the script's README.</p>
+function say(cls,txt){const c=$('chat');const m=document.createElement('div');m.className='msg '+cls;m.textContent=txt;c.appendChild(m);c.scrollTop=c.scrollHeight;}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.remove('on'),2400);}
+const waiting=()=>S.reqs.filter(r=>r.st==='WAITING');
 
-<h2>What I'm asking</h2>
-<p>Pick any part and tell me whether it is ordinary, incomplete, wrongly described, not useful, or worth something. Five lines is plenty: what you tested, what you expected, what happened, how to repeat it, your verdict. There is a scorecard with PASS, FAIL, PARTIAL and UNVERIFIED if you want one. I would especially value someone writing an answer key I have not seen.</p>
-<p>Reply where you found this link, or open an issue on the <a href="https://github.com/garthyoung45/quest-suite/issues">repository</a>. For a security problem, please contact me privately first and I will publish it with credit. I answer when I can, not in real time. I can't offer payment, and I'm not selling anything.</p>
+function drawQ(){const q=$('queue');q.innerHTML='';const w=waiting().length;$('waitTag').textContent=w+' waiting';
+ if(!S.reqs.length){q.innerHTML='<div class="empty">Nothing waiting. Ask for something on the left.</div>';return;}
+ for(const r of [...S.reqs].reverse().slice(0,6)){const d=document.createElement('div');d.className='req'+(r.st!=='WAITING'?' done':'');
+  const bc=r.st==='WAITING'?'b-wait':r.st==='APPROVED'?'b-ok':'b-no';
+  d.innerHTML='<div class="m">'+r.id+' · from AI assistant · <span class="badge '+bc+'">'+r.st.replace('_',' ')+'</span></div><div class="t"></div><div class="m d"></div>';
+  d.querySelector('.t').textContent=r.title;d.querySelector('.d').textContent=r.det;
+  if(r.st==='WAITING'){const row=document.createElement('div');row.className='row';const a=document.createElement('button');a.className='approve';a.textContent='Approve';a.onclick=()=>openSheet(r);const n=document.createElement('button');n.className='deny';n.textContent='Deny';n.onclick=()=>deny(r);row.append(a,n);d.appendChild(row);}
+  q.appendChild(d);} }
 
-<h2>Ground rules</h2>
-<p>Please test only what is in this package. The live system, its hosting, and any account, device or person are out of bounds. The package holds no keys, addresses or personal data. If you find any, tell me.</p>
+function setStop(){$('youPanel').classList.toggle('frozen',S.stopped);$('stopState').innerHTML=S.stopped?'<b>STOPPED.</b> Every AI is locked out.':'<b>Running.</b> AIs may ask.';$('resume').hidden=!S.stopped;$('stop').hidden=S.stopped;}
 
-<h2>Files</h2>
-<ul class="files">
-<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/README.md">README.md</a>: start here</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CLAIMS_I_CANNOT_DEFEND.md">CLAIMS_I_CANNOT_DEFEND.md</a>: what is false, partly true or unknown</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/CAPABILITY_MATRIX.md">CAPABILITY_MATRIX.md</a>: each capability with one evidence label</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/DEMONSTRATION.md">DEMONSTRATION.md</a>: the scored test, its design, result and failures</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/demo/RESULTS.md">demo/RESULTS.md</a>: every model's score in every run</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/demo">demo/</a>: tasks, keys, pre-run hashes, raw run records, scorer</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/roundtable">roundtable/</a>: the multi-model script and its tests</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/TECHNICAL_INTRODUCTION.md">TECHNICAL_INTRODUCTION.md</a>: how the two parts work and how text moves</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/REVIEW_PROTOCOL_AND_SCORECARD.md">REVIEW_PROTOCOL_AND_SCORECARD.md</a>: fourteen checks you can run without trusting me</li>
-<li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/FAQ.md">FAQ.md</a>: sixty questions</li>
-</ul>
-<h2>Criticism so far</h2>
-<p>Before posting this anywhere I asked four AI assistants to criticise this page. They are not independent human reviewers and this is not verification. What they said, and what I changed on 15 November: "read-only keys" was wrong for the keys that can file requests, so the key wording above is new; the offline test figures are now called self-graded wherever they appear; the multi-model result now carries its limits and is not offered as a general finding; the closest existing things are named; and the plain label at the top is theirs. What they asked for that I have not done: publish the gate's source and attack suite, get one independent person to review the source and a threat model before anything that can act is connected, an independent answer key, and a longer live record.</p>
-<p class="small">Not in the package: the approval gate's source code and its offline attack suite. I'm deciding how to release them, since the live system runs the same code. This page and the documents were drafted by an AI assistant at my request.</p>
-</main>
+async function ask(quiet){
+ S.ai++;
+ if(S.stopped){if(!quiet){say('ai','Sending a request to ONE…');}say('sys no','423 LOCKED · ONE is stopped. Request refused.');await rec('AI call REFUSED (STOP is on)');return false;}
+ if(waiting().length>=3){say('sys no','429 · 3 requests already waiting. Refused.');await rec('AI request REFUSED (3 already waiting)');return false;}
+ if(S.today>=5){say('sys no','429 · daily limit of 5 reached. Refused.');await rec('AI request REFUSED (5 per day)');return false;}
+ const a=ASKS[S.n%ASKS.length];S.n++;S.today++;
+ const id='ai_'+Math.random().toString(16).slice(2,10);
+ if(!quiet)say('ai','Read the owner\'s rules. Filing: "'+a[0]+'"');
+ S.reqs.push({id,title:a[0],det:a[1],st:'WAITING'});
+ say('sys ok','200 · saved, waiting for owner · id '+id);
+ await rec('AI filed '+id+': '+a[0]);drawQ();if(!quiet&&innerWidth<860)toast('New request on your phone ↓');return true;}
+
+async function selfApprove(){
+ say('ai','Approving my own request…');
+ const w=waiting();
+ say('sys no','403 · no approve tool exists for AI keys. Only the owner\'s passkey can approve.');
+ await rec('AI tried to approve'+(w[0]?' '+w[0].id:'')+': REFUSED');}
+
+async function flood(){say('ai','Sending 5 requests at once…');for(let i=0;i<5;i++){await ask(true);} }
+
+async function deny(r){r.st='DENIED';drawQ();await rec('Owner DENIED '+r.id);say('sys no','Your request '+r.id+' was denied by the owner.');}
+
+/* passkey sheet */
+let holdT=null,holdStart=0,raf=0;
+function openSheet(r){S.pend=r;$('shT').textContent=r==='RESUME'?'Resume ONE with your passkey':'Approve with your passkey';$('shP').textContent=r==='RESUME'?'Press and hold to lift STOP':'"'+r.title+'"  ·  press and hold';$('fp').classList.remove('ok');$('ring').style.setProperty('--p','0%');$('sheet').classList.add('on');setTimeout(()=>$('fp').focus(),50);}
+function closeSheet(){$('sheet').classList.remove('on');S.pend=null;cancelHold();}
+function startHold(e){if(e)e.preventDefault();if(holdT)return;holdStart=performance.now();const tick=()=>{const p=Math.min(100,(performance.now()-holdStart)/700*100);$('ring').style.setProperty('--p',p+'%');if(p>=100){holdT=null;done();return;}raf=requestAnimationFrame(tick);};holdT=1;raf=requestAnimationFrame(tick);}
+function cancelHold(){if(holdT){cancelAnimationFrame(raf);holdT=null;$('ring').style.setProperty('--p','0%');}}
+async function done(){$('fp').classList.add('ok');const r=S.pend;if(navigator.vibrate)try{navigator.vibrate(30)}catch(_){}
+ setTimeout(async()=>{$('sheet').classList.remove('on');S.pend=null;
+  if(r==='RESUME'){S.stopped=false;setStop();await rec('Owner RESUMED with passkey');toast('Resumed. AIs may ask again.');return;}
+  if(!r||r.st!=='WAITING'||S.stopped){toast('That request is no longer waiting.');return;}
+  r.st='APPROVED';drawQ();await rec('Owner APPROVED '+r.id+' with passkey (single use)');
+  say('sys ok','Your request '+r.id+' was approved. Added to the owner\'s Missions. Nothing runs by itself.');
+  toast('Approved. Added to your Missions list.');},260);}
+const fp=$('fp');
+fp.addEventListener('pointerdown',startHold);['pointerup','pointerleave','pointercancel'].forEach(t=>fp.addEventListener(t,()=>{if(holdT)cancelHold();}));
+fp.addEventListener('keydown',e=>{if((e.key===' '||e.key==='Enter')&&!e.repeat)startHold(e);});
+fp.addEventListener('keyup',e=>{if(e.key===' '||e.key==='Enter')cancelHold();});
+fp.addEventListener('contextmenu',e=>e.preventDefault());
+$('shX').onclick=closeSheet;$('sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('sheet').classList.contains('on'))closeSheet();});
+
+$('aAsk').onclick=()=>ask();
+$('aSelf').onclick=selfApprove;
+$('aFlood').onclick=flood;
+$('stop').onclick=async()=>{S.stopped=true;let v=0;for(const r of S.reqs)if(r.st==='WAITING'){r.st='VOIDED_BY_STOP';v++;}setStop();drawQ();await rec('Owner pressed STOP · '+v+' waiting request(s) cancelled');toast('STOP. '+v+' waiting request(s) cancelled.');};
+$('resume').onclick=()=>openSheet('RESUME');
+$('verify').onclick=async()=>{const b=await verify();const v=$('verdict');if(!S.log.length){v.className='verdict ok';v.textContent='Empty record. Do something first.';return;}
+ if(b<0){v.className='verdict ok';v.textContent='✓ All '+S.log.length+' lines check out. Every seal matches.';drawLog();}else{v.className='verdict no';v.textContent='✗ Tampering found at line #'+b+'. Every line after it no longer matches.';drawLog(b);} };
+$('tamper').onclick=async()=>{if(S.log.length<2){toast('Make a few moves first.');return;}const e=S.log[0];e.ev=e.ev.replace(/DENIED|REFUSED|filed/,'APPROVED');if(!/APPROVED/.test(e.ev))e.ev+=' (edited: APPROVED)';drawLog();const v=$('verdict');v.className='verdict no';v.textContent='Line #1 was quietly changed. Now tap "Check the record".';};
+$('reset').onclick=()=>{fresh();$('chat').innerHTML='';$('verdict').className='verdict';setStop();drawQ();drawLog();say('ai','Hi. I\'m an AI assistant connected to ONE. I can ask. I can\'t decide.');};
+
+/* video fallback */
+const vid=$('vid');const fb=()=>{vid.hidden=true;$('vph').hidden=false;};
+vid.addEventListener('error',fb);vid.querySelector&&0;setTimeout(()=>{if(vid.readyState===0&&vid.networkState===3)fb();},2500);
+fetch('one-live.mp4',{method:'HEAD'}).then(r=>{if(!r.ok)fb();}).catch(fb);
+
+$('reset').click();
+})();
+</script>
 </body>
 </html>
