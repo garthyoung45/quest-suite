@@ -216,16 +216,77 @@ h1{letter-spacing:-.035em}
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.bar .fl{width:var(--w)}}
 
+
+/* ===== expansion: lab, claims, map, dev ===== */
+.herocount{margin:14px 0 0;font:500 13px/1.5 var(--mono);color:var(--muted)}
+.herocount b{color:var(--fg)}
+.s-live{--c:var(--you);--cb:var(--you-bg)} .s-offline{--c:var(--ai);--cb:var(--ai-bg)} .s-sim{--c:var(--warn);--cb:var(--warn-bg)} .s-proposed{--c:#9aa6b8;--cb:rgba(154,166,184,.12)} .s-demo{--c:var(--you);--cb:var(--you-bg)} .s-self{--c:#e0c36b;--cb:rgba(224,195,107,.12)} .s-verified{--c:#c69bff;--cb:rgba(198,155,255,.13)} .s-blocked{--c:#ff8a5c;--cb:rgba(255,138,92,.13)} .s-unknown{--c:#7f8a9c;--cb:rgba(127,138,156,.12)}
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:10px;font-weight:700}
+.skip:focus{top:12px}
+@media print{.topbar,.sheet,.toast,.viz,.acts,.lab,.dev,.chips{display:none!important}body{background:#fff;color:#000}.panel,.claim,.cap,.fact,.rule,details{border-color:#999;background:#fff;color:#000}}
+.badge2{display:inline-block;font:700 10.5px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:5px 7px;border-radius:6px;color:var(--c);background:var(--cb);white-space:nowrap;flex:none}
+.ltabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:6px;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.ltab{flex:none;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:9px 13px;font-weight:600;font-size:14px;min-height:40px}
+.ltab.on{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.labout{margin-top:12px;font:12.5px/1.5 var(--mono);background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px;min-height:120px;max-height:300px;overflow:auto}
+.ll{padding:3px 0;color:#c9d2e0;word-break:break-word}
+.ll.ok{color:var(--you)} .ll.no{color:var(--stop)} .ll.ai{color:var(--ai)} .ll.you{color:#9ff0cf} .ll.stop{color:#ff9aa4} .ll.hd{color:var(--fg);font-weight:600;margin-top:6px;border-top:1px dashed var(--line);padding-top:7px}
+.ll.note{color:var(--warn);font-family:var(--sans);font-size:13.5px;margin-top:4px}
+.doc{white-space:pre-wrap;background:#0b0f15;border:1px solid var(--line);border-radius:12px;padding:12px;font:13px/1.5 var(--mono);color:#c9d2e0;margin:0}
+.doc .hid{opacity:.38;font-style:italic}
+.claims{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:10px}
+@media(min-width:860px){.claims{grid-template-columns:1fr 1fr}}
+.claim{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.claim-h{display:flex;gap:10px;align-items:flex-start}
+.claim-h b{flex:1;font-size:15.5px;line-height:1.35}
+.cn{font:700 12px/1.6 var(--mono);color:var(--dim)}
+.claim dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin:10px 0 0;font-size:14px}
+.claim dt{font:700 11px/1.9 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+.claim dd{margin:0;color:var(--muted)}
+.devrow{display:flex;flex-direction:column;gap:6px;margin-bottom:4px}
+.devrow label{font-size:13px;color:var(--muted);font-weight:600}
+.devrow input{font:inherit;font-size:16px;background:var(--bg2);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px}
+.devout{margin:12px 0 0;background:#0b0f15;border:1px solid var(--line);border-radius:12px;padding:12px;font:12.5px/1.5 var(--mono);color:#c9d2e0;white-space:pre-wrap;word-break:break-word;min-height:120px}
+.h3s{font-family:var(--disp);font-size:20px;margin:26px 0 10px}
+.acct{border-collapse:collapse;width:100%;font-size:14.5px}
+.acct th,.acct td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}
+.acct th{color:var(--dim);font:700 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.acct td:first-child{font-weight:700}
+.rule000{margin:20px 0 0;border-left:3px solid var(--you);padding:6px 0 6px 16px}
+.rule000 p{margin:0;font-family:var(--disp);font-size:clamp(18px,4.4vw,24px);line-height:1.3}
+.rule000 cite{display:block;margin-top:6px;color:var(--dim);font-style:normal;font-size:13px}
+.legend{list-style:none;padding:0;margin:0 0 16px;display:grid;gap:7px;font-size:14.5px;color:var(--muted)}
+.legend li{display:flex;gap:10px;align-items:baseline}
+.capcount{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:560px){.capcount{grid-template-columns:repeat(3,1fr)}}
+.cc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.cc b{display:block;font:700 26px/1.1 var(--disp);color:var(--c)}
+.cc span{font-size:12px;color:var(--muted)}
+.capbar{display:flex;height:10px;border-radius:999px;overflow:hidden;margin:12px 0;gap:2px}
+.capbar span{background:var(--c)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.chip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:8px 12px;font-size:13.5px;font-weight:600;min-height:40px}
+.chip.on{background:var(--card2);color:var(--fg);border-color:#3a4a63}
+.area h3{font-family:var(--disp);font-size:18px;margin:22px 0 10px}
+.caps{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+@media(min-width:760px){.caps{grid-template-columns:1fr 1fr}}
+@media(min-width:1040px){.caps{grid-template-columns:1fr 1fr 1fr}}
+.cap{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.cap-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cap-h b{font-size:15px}
+.cap p{margin:7px 0 0;color:var(--muted);font-size:13.5px;line-height:1.45}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 
 <div class="topbar"><div class="wrap">
   <div class="brand"><span class="dot"></span><b>ONE</b><span class="bs"> · UNBOUNDED WHAT</span></div>
-  <nav><a href="#try">Try it</a><a href="#live">Video</a><a href="#week">This week</a><a class="opt" href="#bakeoff">AI bake-off</a><a class="opt" href="#deep">Details</a></nav>
+  <nav aria-label="Sections"><a href="#try">Studio</a><a href="#lab">Security lab</a><a href="#evidence">Evidence</a><a href="#research">Research</a><a href="#dev">Developers</a><a href="#gov">Governance</a><a href="#map">Capability map</a></nav>
 </div></div>
 
+<main id="main">
 <header class="hero wrap">
  <div class="herogrid">
  <div>
@@ -237,6 +298,7 @@ h1{letter-spacing:-.035em}
   </div>
   <p style="margin:10px 0 0"><span class="tag">Unaudited · open for review</span></p>
   <p style="margin:12px 0 0;color:var(--muted);font-size:15px;max-width:40rem"><b style="color:var(--fg)">What it can't do:</b> STOP only covers ONE. An AI that never goes through ONE isn't stopped by it, and approving a request doesn't carry it out.</p>
+  <p class="herocount" id="heroCount"></p>
   <div class="status-strip">
     <span class="pill"><i></i>STOP off</span>
     <span class="pill"><i></i>Rules dated 17 Nov 2026</span>
@@ -286,7 +348,8 @@ h1{letter-spacing:-.035em}
 </header>
 
 <section id="try" class="wrap">
-  <span class="tag sim">Simulation · runs in your browser</span>
+  <p class="eyebrow">01 · Experience Studio</p>
+  <span class="tag sim">Simulation — no live action · runs in your browser</span>
   <h2>You are the owner. Here comes an AI.</h2>
   <p class="lede">Tap the blue buttons to act as the AI. Answer on "Your phone" with your fingerprint (press and hold). Then try to break it. Same rules as the real system; nothing here touches it.</p>
 
@@ -342,6 +405,26 @@ h1{letter-spacing:-.035em}
   </ol>
 </section>
 
+<section id="lab" class="wrap reveal">
+  <p class="eyebrow">02 · Security Laboratory</p>
+  <span class="tag sim">Simulation — no live action · real cryptography, in your browser</span>
+  <h2>Try to break the gate</h2>
+  <p class="lede">Each lab makes a fresh owner passkey and AI key in your browser and runs the same kind of check the real gate uses: one signature, for one exact request, used once, before it expires, and never while STOP is on. Nothing here touches the live system. Passing here proves the idea, not the live code.</p>
+  <div class="lab panel">
+    <div class="ltabs" id="labTabs" role="tablist" aria-label="Security labs"></div>
+    <div id="labBody"></div>
+    <div class="labout" id="labOut" aria-live="polite"></div>
+    <div class="acts"><button class="act" id="labReset">Clear and make new keys</button></div>
+  </div>
+</section>
+
+<section id="evidence" class="wrap reveal">
+  <p class="eyebrow">03 · Evidence Observatory</p>
+  <h2>Claim to proof</h2>
+  <p class="lede">Every claim this page makes, what backs it, and where it stops. <b>Demonstrated</b> means shown on the real system in the video. <b>Self-reported</b> means it comes from my own logs or records. <b>Offline-tested</b> means tested by me, away from the live system. Nothing here is independently verified.</p>
+  <ol class="claims" id="claimsList"></ol>
+</section>
+
 <section id="week" class="wrap reveal">
   <p class="eyebrow">Update · 17 November 2026</p>
   <h2>What changed this week</h2>
@@ -356,7 +439,10 @@ h1{letter-spacing:-.035em}
   </ul>
 </section>
 
-<section id="bakeoff" class="wrap reveal">
+<section id="research" class="wrap reveal" style="padding-bottom:0">
+  <p class="eyebrow">04 · Research Institute</p>
+</section>
+<section id="bakeoff" class="wrap reveal" style="padding-top:0">
   <p class="eyebrow">Experiment · 17 November 2026</p>
   <h2>Six AI models, eight blind tests</h2>
   <p class="lede">Each model got the same 8 tasks alone, with no view of the others: check a record for tampering, find fail-open bugs, critique a spec, write working code, spot an impossible plan, answer standards facts, rewrite to a word limit, and count failures in a log. +1 per real catch, −1 per false claim, answer key written before any run.</p>
@@ -372,13 +458,43 @@ h1{letter-spacing:-.035em}
   <p class="note" style="max-width:42rem">Limits: one run each, so near-ties are ties. The tasks and the answer key were written by a Claude model other than the one tested, and scoring was done by AI sessions on my account. One coding task was worded ambiguously; scores use the hidden tests' reading. The models were API versions, not the phone apps. Whatever the scores, no AI approves anything: only my passkey does.</p>
 </section>
 
-<section class="wrap">
+<section id="dev" class="wrap reveal">
+  <p class="eyebrow">05 · Developer Platform</p>
+  <span class="tag sim">Simulation — no live action · mock API in your browser</span>
+  <h2>What an AI sees</h2>
+  <p class="lede">These are the calls a connected AI gets. Try filing more than three, press the owner's STOP, or look for an approve call. Response shapes are illustrative, not the live contract, and no request leaves this page.</p>
+  <div class="panel dev">
+    <div class="devrow"><label for="devTitle">Request title</label><input id="devTitle" type="text" maxlength="120" value="Order a replacement filter, $40"></div>
+    <div class="acts">
+      <button class="act ai" data-dev="get_rules">get_rules</button>
+      <button class="act ai" data-dev="get_status">get_status</button>
+      <button class="act ai" data-dev="send_request">send_request</button>
+      <button class="act ai" data-dev="list_requests">list_requests</button>
+      <button class="act bad" data-dev="approve">approve (try it)</button>
+      <button class="act" data-dev="stop" id="devStop" style="border-color:rgba(255,77,94,.5)">Owner: STOP</button>
+    </div>
+    <pre class="devout" id="devOut" aria-live="polite"></pre>
+  </div>
+</section>
+
+<section id="gov" class="wrap">
+  <p class="eyebrow">06 · Governance Center</p>
   <h2>Three rules. That's the whole idea.</h2>
   <div class="rules">
     <div class="rule"><div class="k" style="color:var(--ai)">AIs ask</div><p>A connected AI can read the status and, with the right key, file a request. That is all it can do. It cannot approve, change rules, or touch anything.</p></div>
     <div class="rule"><div class="k" style="color:var(--you)">You approve</div><p>Only your passkey says yes. Each approval is for one exact request, works once, and is written into a sealed record.</p></div>
     <div class="rule"><div class="k" style="color:var(--stop)">STOP wins</div><p>One button freezes everything new in ONE and cancels every waiting request. Undoing it needs your passkey. It only covers ONE: an AI working outside ONE is not stopped by it.</p></div>
-  </div>
+    </div>
+  <h3 class="h3s">Who does what, today</h3>
+  <div class="tw"><table class="acct">
+    <tr><th>Step</th><th>Who</th><th>How</th></tr>
+    <tr><td>Asks</td><td>A connected AI</td><td>Its own key, through the AI door</td></tr>
+    <tr><td>Approves</td><td>The owner only</td><td>A passkey, for one exact request, once</td></tr>
+    <tr><td>Stops</td><td>The owner</td><td>STOP in the owner app; lifting it needs the passkey</td></tr>
+    <tr><td>Carries out</td><td>Nobody</td><td>No executor exists</td></tr>
+    <tr><td>Reviews</td><td>So far, only me and AI sessions on my account</td><td>This page asks for outside reviewers</td></tr>
+  </table></div>
+  <blockquote class="rule000"><p>&ldquo;Any consequential action needs the owner's explicit approval for that exact action. Approval is never inferred.&rdquo;</p><cite>The owner's rule, as served to every connected AI (read 17 Nov 2026)</cite></blockquote>
 </section>
 
 <section class="wrap">
@@ -404,6 +520,22 @@ h1{letter-spacing:-.035em}
       <li>The real owner app is private (it also holds household things), so the live part is shown as a recording, not a link.</li>
     </ul>
   </div>
+</section>
+
+<section id="map" class="wrap reveal">
+  <p class="eyebrow">07 · Evidence and Trust Foundation</p>
+  <h2>The capability map</h2>
+  <p class="lede">The full plan: 50 capabilities in five areas, plus five inventions. Listing them does not mean they are built. Each one carries one status, and each status means one thing:</p>
+  <ul class="legend">
+    <li><span class="badge2 s-live">Live</span> working now on the real system, or published here with real data</li>
+    <li><span class="badge2 s-offline">Offline-tested</span> built and tested by me, not part of the live system</li>
+    <li><span class="badge2 s-sim">Simulated</span> a demonstration on this page, in your browser only</li>
+    <li><span class="badge2 s-proposed">Proposed</span> written down, not built</li>
+    <li><span class="badge2 s-blocked">Blocked</span> built, but something stops it running (none of the 50; the runner is one)</li>
+    <li><span class="badge2 s-unknown">Unknown</span> not checked either way</li>
+    <li><span class="badge2 s-verified">Independently verified</span> checked by someone outside, with evidence you can trace to them. None yet.</li>
+  </ul>
+  <div id="capmap"></div>
 </section>
 
 <section class="wrap" id="deep">
@@ -481,8 +613,9 @@ h1{letter-spacing:-.035em}
   </div></details>
 </section>
 
+</main>
 <footer class="wrap">
-  ONE by Garth Young · Unaudited approval-gate demo, no executor · The simulation on this page is not connected to the live system · Updated 17 November 2026
+  ONE by Garth Young · Unaudited approval-gate demo, no executor · The simulation on this page is not connected to the live system · Updated 17 November 2026 · No account needed; this page sends nothing anywhere
 </footer>
 
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">
@@ -595,5 +728,7 @@ $('reset').click();
 (function(){var els=document.querySelectorAll('.reveal,#boChart');if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.15});els.forEach(function(e){io.observe(e)});})();
 </script>
+<script src="caps.js"></script>
+<script src="lab.js"></script>
 </body>
 </html>
