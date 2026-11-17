@@ -6,6 +6,7 @@
 - "Run every test" in the browser (the kit's 18 cases), and a flight recorder explorer you can try to fool.
 - Reviewer mode (opens every detail, hides decoration), light mode, plain-English glossary.
 - Status changes, each with a reason in caps.js: Red-Team Challenge Portal and Journalist mode to Live; Timeline Reconstruction to Simulated; Assurance Flight Recorder to Offline-tested. Counts now 10 live, 4 offline-tested, 11 simulated, 30 proposed, 0 independently verified.
+- Phone owner app now marked live (17 Nov, 4:01 AM ET, behind owner sign-in).
 - Test suite grown to 31 page checks; all pass.
 
 ## 17 Nov 2026, phase 2 step 1
