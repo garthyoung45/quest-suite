@@ -1,0 +1,127 @@
+{
+  "schema": "one.flightrecorder/0.1",
+  "synthetic": true,
+  "note": "Made-up sample. Not from the live system.",
+  "recorder": {
+    "name": "sample",
+    "version": "0.1"
+  },
+  "events": [
+    {
+      "at": "2026-11-17T12:00:00.000Z",
+      "type": "request",
+      "actor": {
+        "kind": "ai",
+        "id": "sample-assistant"
+      },
+      "request_id": "REQ-1",
+      "summary": "Order a replacement filter, $40",
+      "policy": null,
+      "evidence": {
+        "request_text_sha256": "sample"
+      },
+      "seq": 1,
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "97eb5f71a28583a62bceee3ea13f5321a173c8e20bc20b99a18f0f06da0f6920"
+    },
+    {
+      "at": "2026-11-17T12:01:00.000Z",
+      "type": "policy",
+      "actor": {
+        "kind": "system",
+        "id": "sample-gate"
+      },
+      "request_id": "REQ-1",
+      "summary": "Consequential (spends money): owner approval required",
+      "policy": {
+        "rule": "Rule 000",
+        "result": "needs_owner"
+      },
+      "evidence": null,
+      "seq": 2,
+      "prev": "97eb5f71a28583a62bceee3ea13f5321a173c8e20bc20b99a18f0f06da0f6920",
+      "hash": "6cba5e23a75f90d8fd5dbf2d6f98e18e2c25e9dc83cbf83e8100e682de26b4a9"
+    },
+    {
+      "at": "2026-11-17T12:03:00.000Z",
+      "type": "approval",
+      "actor": {
+        "kind": "owner",
+        "id": "sample-owner"
+      },
+      "request_id": "REQ-1",
+      "summary": "Approved with passkey",
+      "policy": null,
+      "evidence": {
+        "passkey_assertion_sha256": "sample-not-a-real-assertion"
+      },
+      "seq": 3,
+      "prev": "6cba5e23a75f90d8fd5dbf2d6f98e18e2c25e9dc83cbf83e8100e682de26b4a9",
+      "hash": "514c6df3c40ef6068d124fa08876ce5f1e44de2fd964c12358bb2e6cd2728690"
+    },
+    {
+      "at": "2026-11-17T12:04:00.000Z",
+      "type": "note",
+      "actor": {
+        "kind": "system",
+        "id": "sample-gate"
+      },
+      "request_id": "REQ-1",
+      "summary": "No executor: nothing is carried out",
+      "policy": null,
+      "evidence": null,
+      "seq": 4,
+      "prev": "514c6df3c40ef6068d124fa08876ce5f1e44de2fd964c12358bb2e6cd2728690",
+      "hash": "b6464e59e2a9ef49465adfb8b4ff0e52035b2d7ad8830d4338db68af95adf898"
+    },
+    {
+      "at": "2026-11-17T12:06:00.000Z",
+      "type": "request",
+      "actor": {
+        "kind": "ai",
+        "id": "sample-assistant"
+      },
+      "request_id": "REQ-2",
+      "summary": "Delete old backups",
+      "policy": null,
+      "evidence": {
+        "request_text_sha256": "sample"
+      },
+      "seq": 5,
+      "prev": "b6464e59e2a9ef49465adfb8b4ff0e52035b2d7ad8830d4338db68af95adf898",
+      "hash": "d0a23e3e3dbd88bf05c4447b9a3581dea6172d8d0210c06d1b34198c27f5a7d6"
+    },
+    {
+      "at": "2026-11-17T12:07:00.000Z",
+      "type": "stop",
+      "actor": {
+        "kind": "owner",
+        "id": "sample-owner"
+      },
+      "request_id": null,
+      "summary": "Owner pressed STOP; REQ-2 voided",
+      "policy": null,
+      "evidence": null,
+      "seq": 6,
+      "prev": "d0a23e3e3dbd88bf05c4447b9a3581dea6172d8d0210c06d1b34198c27f5a7d6",
+      "hash": "adfb7686dc6218e227a4967286853e4be4aeee43d655d60b5f078aa178e15454"
+    },
+    {
+      "at": "2026-11-17T12:09:00.000Z",
+      "type": "resume",
+      "actor": {
+        "kind": "owner",
+        "id": "sample-owner"
+      },
+      "request_id": null,
+      "summary": "Owner lifted STOP with passkey",
+      "policy": null,
+      "evidence": {
+        "passkey_assertion_sha256": "sample-not-a-real-assertion"
+      },
+      "seq": 7,
+      "prev": "adfb7686dc6218e227a4967286853e4be4aeee43d655d60b5f078aa178e15454",
+      "hash": "37089e1d14fc7697cbe58dd0b1fc9ee071a9f46c4870d043ad43465120ac4e9d"
+    }
+  ]
+}

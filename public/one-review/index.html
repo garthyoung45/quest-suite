@@ -297,7 +297,7 @@ h1{letter-spacing:-.035em}
     <a class="btn ghost" href="#live">Watch it live</a>
   </div>
   <p style="margin:10px 0 0"><span class="tag">Unaudited · open for review</span></p>
-  <p style="margin:12px 0 0;color:var(--muted);font-size:15px;max-width:40rem"><b style="color:var(--fg)">What it can't do:</b> STOP only covers ONE. An AI that never goes through ONE isn't stopped by it, and approving a request doesn't carry it out.</p>
+  <p style="margin:12px 0 0;color:var(--muted);font-size:15px;max-width:40rem"><b style="color:var(--fg)">What it can't do:</b> STOP only covers ONE. An AI that never goes through ONE isn't stopped by it. And an approval is carried out for one thing only: a test action that adds a line to one sandbox file.</p>
   <p class="herocount" id="heroCount"></p>
   <div class="status-strip">
     <span class="pill"><i></i>STOP off</span>
@@ -416,6 +416,7 @@ h1{letter-spacing:-.035em}
     <div class="labout" id="labOut" aria-live="polite"></div>
     <div class="acts"><button class="act" id="labReset">Clear and make new keys</button></div>
   </div>
+  <p class="note" style="max-width:42rem"><b>Rerun it yourself:</b> the <a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/kit">rerun kit</a> has the same rules as 18 attack cases you can run with Node, no account or dependencies, plus a check that deliberately broken gates get caught. It tests a reference model of the rules, not ONE's live code.</p>
 </section>
 
 <section id="evidence" class="wrap reveal">
@@ -433,7 +434,7 @@ h1{letter-spacing:-.035em}
     <li class="tl-item"><span class="tl-ic g">0</span><div><h4>The owner's rule is now served to every connected AI</h4><p>Any connected AI that asks ONE for its rules gets the owner's standing rule, dated 17 Nov: anything consequential needs the owner's approval for that exact action, given with a passkey, once. Approval is never inferred.</p><span class="st g">Checked live</span></div></li>
     <li class="tl-item"><span class="tl-ic g">↺</span><div><h4>Rollback drill passed live, twice</h4><p>A new version is deployed, checked, and rolled back automatically if any check fails. One of the two live drills used a deliberately broken version, and it was rolled back.</p><span class="st g">Checked live · by my logs</span></div></li>
     <li class="tl-item"><span class="tl-ic g">✓</span><div><h4>Code deploys now go through a passkey gate</h4><p>Tonight's newest version of ONE went live only after I approved that exact deploy with my passkey. The gate is part of my own deploy process: someone holding the hosting account could still deploy around it, and nothing yet alarms on that.</p><span class="st g">Checked live</span></div></li>
-    <li class="tl-item"><span class="tl-ic y">▶</span><div><h4>A door for a future “runner” is deployed, but nothing runs</h4><p>The runner is the first small piece that could one day carry out an approved request. Its door is live; the runner itself is not running yet, so approved requests are still not carried out.</p><span class="st y">Deployed · not running</span></div></li>
+    <li class="tl-item"><span class="tl-ic y">▶</span><div><h4>A runner carried out its first approved action</h4><p>After my passkey approval, a runner on my home computer did the one thing it is allowed to do: it added one line to a sandbox test file and reported back (17 Nov, 2:27 AM ET). It waits 60 seconds before acting, and STOP halts it. It can do nothing else.</p><span class="st y">Checked on the machine · by my logs</span></div></li>
     <li class="tl-item"><span class="tl-ic b">■</span><div><h4>A “black box” recorder on a small home computer</h4><p>A separate recorder has been running on a mini PC at home since 14 Nov. It is meant to hold signed records that outside witnesses can check. It is mine, so it is not an independent witness, and no outside witness has signed anything in it yet.</p><span class="st b">Running · no outside witness</span></div></li>
     <li class="tl-item"><span class="tl-ic b">◎</span><div><h4>A phone-first owner app is built, not live</h4><p>A rebuilt owner app for the phone passed my offline tests. It is a preview with made-up data and is not connected to the live system.</p><span class="st b">Preview only</span></div></li>
   </ul>
@@ -491,7 +492,7 @@ h1{letter-spacing:-.035em}
     <tr><td>Asks</td><td>A connected AI</td><td>Its own key, through the AI door</td></tr>
     <tr><td>Approves</td><td>The owner only</td><td>A passkey, for one exact request, once</td></tr>
     <tr><td>Stops</td><td>The owner</td><td>STOP in the owner app; lifting it needs the passkey</td></tr>
-    <tr><td>Carries out</td><td>Nobody</td><td>No executor exists</td></tr>
+    <tr><td>Carries out</td><td>A runner on my home computer</td><td>One allowlisted test action only, after the owner's approval and a 60-second wait; STOP halts it</td></tr>
     <tr><td>Reviews</td><td>So far, only me and AI sessions on my account</td><td>This page asks for outside reviewers</td></tr>
   </table></div>
   <blockquote class="rule000"><p>&ldquo;Any consequential action needs the owner's explicit approval for that exact action. Approval is never inferred.&rdquo;</p><cite>The owner's rule, as served to every connected AI (read 17 Nov 2026)</cite></blockquote>
@@ -514,7 +515,7 @@ h1{letter-spacing:-.035em}
     <h3>What ONE is not (yet)</h3>
     <ul>
       <li><b>Unaudited.</b> Everything here was built and tested by me with AI coding assistants. Nobody independent has checked it.</li>
-      <li><b>Nothing carries out an approved request.</b> Approving adds it to my to-do list. There is no "executor" yet, on purpose.</li>
+      <li><b>Almost nothing is carried out.</b> One allowlisted test action (adding a line to a sandbox file) can run after approval. Everything else just goes on my to-do list, on purpose.</li>
       <li><b>Keys:</b> by my records, 3 keys can file requests and 5 can only read status. I have not yet read the live key settings back to prove that.</li>
       <li><b>Not new as an idea.</b> Human approval for AI actions is well known. What's here is one working, inspectable attempt.</li>
       <li>The real owner app is private (it also holds household things), so the live part is shown as a recording, not a link.</li>
@@ -548,7 +549,7 @@ h1{letter-spacing:-.035em}
       <li>The AI calls <code>get_rules</code> and reads the owner's standing rule: nothing consequential without the owner's explicit word.</li>
       <li>The AI calls <code>send_request</code> with a title and details. ONE stores it as waiting and returns only an id. Limits: 3 waiting and 5 a day per key; each expires after 7 days.</li>
       <li class="y">The owner sees it in the owner app, behind a sign-in wall. Approve opens the phone's passkey prompt; the signature is bound to that one request and works once.</li>
-      <li class="y">Approved: the request becomes a Mission on the owner's list. Nothing else happens.</li>
+      <li class="y">Approved: the request becomes a Mission on the owner's list. If it is the one allowlisted test action, a runner carries it out after a 60-second wait (STOP halts it). Otherwise nothing else happens.</li>
       <li>The AI can call <code>list_requests</code> to see what became of its own requests, and nobody else's.</li>
       <li class="s">STOP: every waiting request is cancelled and every AI call is refused until the owner resumes with a passkey. A resume signed before a STOP cannot undo that STOP.</li>
       <li>Every step is written to a hash-chained record, copied hourly to a home computer.</li>
@@ -562,7 +563,7 @@ h1{letter-spacing:-.035em}
       <tr><td>File a request</td><td>No</td><td>Yes</td><td>Yes</td></tr>
       <tr><td>Approve anything</td><td>No</td><td>No</td><td>Passkey only</td></tr>
       <tr><td>Press or lift STOP</td><td>No</td><td>No</td><td>Lift needs passkey</td></tr>
-      <tr><td>Carry out an action</td><td colspan="3">Nobody. No executor exists.</td></tr>
+      <tr><td>Carry out an action</td><td colspan="3">Only the runner, only one allowlisted test action, only after the owner's passkey approval.</td></tr>
     </table></div>
     <p>Key counts are from my records; the live settings have not been read back yet.</p>
   </div></details>
@@ -585,7 +586,7 @@ h1{letter-spacing:-.035em}
 
   <details><summary>What's broken or missing</summary><div class="dbody">
     <ul>
-      <li>No executor: approved requests are not carried out.</li>
+      <li>Executor: only one allowlisted test action can run. Nothing real is carried out yet.</li>
       <li>Deploys: tonight's deploy went through my passkey gate, but the gate is part of my own process. Someone with the hosting account could still deploy around it, and nothing alarms on that yet.</li>
       <li>The runner's door is deployed, but the runner is not running.</li>
       <li>No independent review of anything. Checks described as "independent" in my files were done by a separate AI session on my own account, not by a person.</li>
@@ -608,6 +609,8 @@ h1{letter-spacing:-.035em}
       <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/REVIEW_PROTOCOL_AND_SCORECARD.md">Review protocol and scorecard</a></li>
       <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/DEMONSTRATION.md">The six-AI demonstration in full</a></li>
       <li><a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/FAQ.md">FAQ</a></li>
+      <li><a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/kit">Rerun kit: 18 attack cases, broken-gate check, flight recorder draft, open challenges</a></li>
+      <li><a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/site-docs">Site docs: claims register, feature matrix, test report</a></li>
       <li><a href="https://github.com/garthyoung45/quest-suite/issues">Tell me what's wrong (GitHub issues)</a></li>
     </ul>
   </div></details>
@@ -615,7 +618,7 @@ h1{letter-spacing:-.035em}
 
 </main>
 <footer class="wrap">
-  ONE by Garth Young · Unaudited approval-gate demo, no executor · The simulation on this page is not connected to the live system · Updated 17 November 2026 · No account needed; this page sends nothing anywhere
+  ONE by Garth Young · Unaudited approval gate · runner limited to one test action · The simulation on this page is not connected to the live system · Updated 17 November 2026 · No account needed; this page sends nothing anywhere
 </footer>
 
 <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shT">

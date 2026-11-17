@@ -93,7 +93,7 @@
       return sha(r.text).then(function (h) {
         if (h !== a.hash) return { ok: false, why: "Refused: the request's wording changed after the owner signed it." };
         G.used[a.nonce] = 1; r.st = "APPROVED";
-        return { ok: true, why: "Accepted: request " + r.id + " approved. (Approving adds it to the owner's list. Nothing carries it out.)" };
+        return { ok: true, why: "Accepted: request " + r.id + " approved. (In this demo nothing is carried out.)" };
       });
     });
   }
@@ -158,7 +158,7 @@
     },
     race: {
       title: "STOP against an approval in flight",
-      intro: "The owner taps Approve. Before it lands, someone presses STOP. Which wins? There is no executor, so the race is between the approval and STOP.",
+      intro: "The owner taps Approve. Before it lands, someone presses STOP. Which wins? In this demo there is no execution step, so the race is between the approval and STOP.",
       acts: [
         ["Approve, then STOP before it lands", function () {
           var sig;

@@ -1,6 +1,6 @@
 # Feature matrix
 
-Updated 17 Nov 2026. Product states: Live, Offline-tested, Simulated, Proposed, Blocked, Unknown, Independently verified (none).
+Generated from caps.js (17 November 2026). Counts: 34 Proposed, 3 Offline-tested, 10 Simulated, 8 Live, 0 Independently verified.
 
 ## Original page features (parity)
 
@@ -12,21 +12,19 @@ Updated 17 Nov 2026. Product states: Live, Offline-tested, Simulated, Proposed, 
 | 45-second real video + poster + MP4 link | Video section | Kept |
 | What changed this week | 03 Evidence Observatory | Kept |
 | Six-model bake-off chart | 04 Research Institute | Kept |
-| Three rules | 06 Governance Center | Kept |
-| What has really happened (facts) | 06 Governance Center | Kept |
-| What ONE is not (yet) | 06 Governance Center | Kept |
-| Soup to nuts details (flow, key table, attacks, six-AI experiment, broken/missing, who built it, review links) | Details | Kept |
-| Links: results, raw runs, claims I cannot defend, capability matrix, technical intro, review protocol, demonstration, FAQ, GitHub issues | Details | Kept (9 GitHub links) |
+| Three rules, facts, what ONE is not | 06 Governance Center | Kept |
+| Details: flow, key table, attacks, six-AI experiment, broken/missing, who built it, review links | Details | Kept |
+| Links: results, raw runs, claims I cannot defend, capability matrix, technical intro, review protocol, demonstration, FAQ, GitHub issues | Details | Kept |
 
 ## Intelligence and autonomy
 
 | Capability | Status | What exists |
 |---|---|---|
-| AI Behavior Observatory | Proposed | Today the owner app lists what each AI asked for. Nothing yet shows what an AI actually did, because nothing carries out requests. |
+| AI Behavior Observatory | Proposed | Today the owner app lists what each AI asked for. Nothing yet shows what approved actions did; the only action that can run is a test line in a sandbox file. |
 | Cross-AI Consensus Engine | Offline-tested | A six-model panel runs on my account as a separate tool. It is not part of ONE. It has never been shown to beat its best single model. |
 | Disagreement Laboratory | Proposed | Not built. |
 | Decision Consequence Simulator | Proposed | Not built. |
-| Autonomy Ladder | Proposed | Today there are only two rungs: read status, or also file a request. No AI can approve or act. |
+| Autonomy Ladder | Proposed | Today: read status; also file a request; and one allowlisted test action that a runner carries out after the owner approves. No AI can approve. |
 | AI Capability Passport | Proposed | Each AI key has a scope in my records (status or ask). No passport format exists, and live scopes have not been read back. |
 | Agent Reputation System | Proposed | The 17 Nov bake-off is the only scored data so far: one run per model. |
 | Human Override Simulator | Simulated | The owner simulator below: the AI cannot approve its own request, and STOP cancels what is waiting. |
@@ -44,7 +42,7 @@ Updated 17 Nov 2026. Product states: Live, Offline-tested, Simulated, Proposed, 
 | Kill-Switch Reliability Testing | Offline-tested | In offline tests STOP refused 736 writes in a row and failed closed in 7 error cases. Demo below. |
 | Evidence Tampering Challenge | Simulated | Edit a sample record below and watch the check catch it. |
 | Replay Attack Simulator | Simulated | Demo below. Offline tests also tried replaying approvals (self-graded). |
-| Race Condition Laboratory | Simulated | Demo below: STOP against an approval in flight. There is no executor, so there is no execution to cancel. |
+| Race Condition Laboratory | Simulated | Demo below: STOP against an approval in flight. This demo has no execution step. |
 | Supply Chain Threat Model | Proposed | Not written. |
 | Red-Team Challenge Portal | Proposed | Today: GitHub issues and a published review protocol. No scoped challenges yet, and no outside findings. |
 

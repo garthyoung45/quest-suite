@@ -10,11 +10,11 @@ window.ONE_CAPS = {
   updated: "17 November 2026",
   areas: [
     { id: "ai", name: "Intelligence and autonomy", items: [
-      ["AI Behavior Observatory", "proposed", "Today the owner app lists what each AI asked for. Nothing yet shows what an AI actually did, because nothing carries out requests."],
+      ["AI Behavior Observatory", "proposed", "Today the owner app lists what each AI asked for. Nothing yet shows what approved actions did; the only action that can run is a test line in a sandbox file."],
       ["Cross-AI Consensus Engine", "offline", "A six-model panel runs on my account as a separate tool. It is not part of ONE. It has never been shown to beat its best single model."],
       ["Disagreement Laboratory", "proposed", "Not built."],
       ["Decision Consequence Simulator", "proposed", "Not built."],
-      ["Autonomy Ladder", "proposed", "Today there are only two rungs: read status, or also file a request. No AI can approve or act."],
+      ["Autonomy Ladder", "proposed", "Today: read status; also file a request; and one allowlisted test action that a runner carries out after the owner approves. No AI can approve."],
       ["AI Capability Passport", "proposed", "Each AI key has a scope in my records (status or ask). No passport format exists, and live scopes have not been read back."],
       ["Agent Reputation System", "proposed", "The 17 Nov bake-off is the only scored data so far: one run per model."],
       ["Human Override Simulator", "sim", "The owner simulator below: the AI cannot approve its own request, and STOP cancels what is waiting.", "#try"],
@@ -29,7 +29,7 @@ window.ONE_CAPS = {
       ["Kill-Switch Reliability Testing", "offline", "In offline tests STOP refused 736 writes in a row and failed closed in 7 error cases. Demo below.", "#lab"],
       ["Evidence Tampering Challenge", "sim", "Edit a sample record below and watch the check catch it.", "#try"],
       ["Replay Attack Simulator", "sim", "Demo below. Offline tests also tried replaying approvals (self-graded).", "#lab"],
-      ["Race Condition Laboratory", "sim", "Demo below: STOP against an approval in flight. There is no executor, so there is no execution to cancel.", "#lab"],
+      ["Race Condition Laboratory", "sim", "Demo below: STOP against an approval in flight. This demo has no execution step.", "#lab"],
       ["Supply Chain Threat Model", "proposed", "Not written."],
       ["Red-Team Challenge Portal", "proposed", "Today: GitHub issues and a published review protocol. No scoped challenges yet, and no outside findings."]
     ]},
@@ -93,7 +93,7 @@ window.ONE_CLAIMS = [
   ["A bad version is rolled back automatically; the live drill passed twice.", "self", "My deploy logs. The second drill (17 Nov) used a deliberately broken version.", "Logs are not published. Restoring live data has never been rehearsed."],
   ["Tonight's code deploy needed the owner's passkey.", "self", "My deploy log, 17 Nov.", "The gate is part of my own deploy process. Someone with the hosting account could deploy around it, and nothing alarms on that yet."],
   ["Every connected AI is served the owner's rule in plain English.", "self", "Read from the live rules door, 17 Nov 2026, 2:03 AM ET.", "Reading a rule does not make an AI obey it. The gate is what enforces it."],
-  ["Nothing carries out an approved request.", "self", "No executor exists. The door for a future runner is deployed; the runner is not running.", "This is a limit, stated on purpose."],
+  ["Only one approved action can be carried out: adding a line to one sandbox test file.", "self", "First run 17 Nov, 2:27 AM ET after my passkey approval: one line added, done reported back. The file and the runner's log were checked on the machine by my AI session.", "Not shown publicly yet. The allowlist, the 60-second wait and STOP halting the runner have no outside test."],
   ["Six models as a panel never beat the best single model.", "offline", "Raw runs and the table script are public (see Research).", "Two small made-up tasks; answer keys written by one of the tested models."],
   ["Bake-off: GPT 49, Gemini 48, Grok 48, Claude 46, Perplexity 30, Mistral 24 (of 48).", "offline", "8 tasks, answer key fixed before any run, 17 Nov.", "One run each; self-graded; results not yet published as files."],
   ["No outside person has checked any of this.", "self", "Zero outside findings so far.", "That is why this page exists."]
