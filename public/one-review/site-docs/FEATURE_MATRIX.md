@@ -1,6 +1,6 @@
 # Feature matrix
 
-Generated from caps.js (17 November 2026). Counts: 34 Proposed, 3 Offline-tested, 10 Simulated, 8 Live, 0 Independently verified.
+Generated from caps.js (17 November 2026). Counts: 30 Proposed, 4 Offline-tested, 11 Simulated, 10 Live, 0 Independently verified.
 
 ## Original page features (parity)
 
@@ -39,22 +39,22 @@ Generated from caps.js (17 November 2026). Counts: 34 Proposed, 3 Offline-tested
 | Approval Spoofing Laboratory | Simulated | Demo below, using real browser cryptography. The live system's own spoofing tests were offline and self-graded. |
 | Privilege Escalation Simulator | Simulated | Demo below and in the owner simulator (the AI tries to approve itself). |
 | Compromised Agent Containment | Proposed | Not built. A key could be removed by hand; that has not been drilled. |
-| Kill-Switch Reliability Testing | Offline-tested | In offline tests STOP refused 736 writes in a row and failed closed in 7 error cases. Demo below. |
+| Kill-Switch Reliability Testing | Offline-tested | In offline tests STOP refused 736 writes in a row and failed closed in 7 error cases. The rerun kit adds 5 STOP and fail-closed cases anyone can run (reference model). |
 | Evidence Tampering Challenge | Simulated | Edit a sample record below and watch the check catch it. |
-| Replay Attack Simulator | Simulated | Demo below. Offline tests also tried replaying approvals (self-graded). |
+| Replay Attack Simulator | Simulated | Demo below, and 3 replay and expiry cases in the rerun kit. Offline tests also tried replaying approvals on the live build's copy (self-graded). |
 | Race Condition Laboratory | Simulated | Demo below: STOP against an approval in flight. This demo has no execution step. |
 | Supply Chain Threat Model | Proposed | Not written. |
-| Red-Team Challenge Portal | Proposed | Today: GitHub issues and a published review protocol. No scoped challenges yet, and no outside findings. |
+| Red-Team Challenge Portal | Live | Four scoped challenges are published with the rerun kit; findings go to GitHub issues. Zero outside findings so far. |
 
 ## Black box and evidence
 
 | Capability | Status | What exists |
 |---|---|---|
-| Cryptographic Evidence Explorer | Simulated | The sample record below shows each line's seal and the link to the line before. |
+| Cryptographic Evidence Explorer | Simulated | The sample record in the simulator and the flight recorder explorer show each event's seal and its link to the one before. |
 | Decision Provenance Graph | Proposed | Not built. |
-| Evidence Completeness Scoring | Proposed | Not built. A hash chain shows lines were not changed; it does not show nothing is missing. |
-| Timeline Reconstruction | Proposed | Not built. |
-| Independent Verification Packages | Live | The six-AI demo's raw runs and table script are public. The gate's source code and attack tests are not published yet. |
+| Evidence Completeness Scoring | Proposed | Not built. The draft validator catches gaps in the middle, but a chain cannot show that nothing is missing at the end. |
+| Timeline Reconstruction | Simulated | The flight recorder explorer replays a made-up request's events in order. |
+| Independent Verification Packages | Live | The rerun kit (18 attack cases, broken-gate check, recorder validator) and the six-AI demo's raw runs are public. The live gate's source code is not published yet. |
 | Version Comparison Engine | Proposed | Not built. |
 | Audit Readiness Dashboard | Proposed | Not built. |
 | Evidence Retention Simulator | Proposed | Not built. |
@@ -74,7 +74,7 @@ Generated from caps.js (17 November 2026). Counts: 34 Proposed, 3 Offline-tested
 | Consent and Privacy Center | Proposed | Not written. |
 | Human Accountability Map | Live | Who requests, approves, carries out and reviews, as the live system works today. |
 | Emergency Recovery Walkthrough | Proposed | Not written. Rollback of a bad version passed live twice (my logs). Restoring live data has never been rehearsed. |
-| Plain-English Decision Explanations | Live | The owner's rule is served in plain English to every connected AI. |
+| Plain-English Decision Explanations | Live | The owner's rule is served in plain English to every connected AI, and this page has a plain-English glossary. |
 
 ## Public research and ecosystem
 
@@ -87,15 +87,15 @@ Generated from caps.js (17 November 2026). Counts: 34 Proposed, 3 Offline-tested
 | Compliance Mapping Explorer | Proposed | Not built. ONE holds no certification of any kind. |
 | Public Roadmap and Release History | Live | This map and the weekly update on this page. |
 | Researcher Collaboration Portal | Live | GitHub issues and a published review protocol. Zero outside findings so far. |
-| Journalist Investigation Mode | Proposed | Not built. |
+| Journalist Investigation Mode | Live | A plain-English glossary and a reviewer mode that opens every detail. No separate press brief yet. |
 | Enterprise Adoption Simulator | Proposed | Not built. |
-| Assurance Benchmark Laboratory | Offline-tested | Two scored experiments: the six-AI panel test and the 17 Nov bake-off. Self-graded. |
+| Assurance Benchmark Laboratory | Offline-tested | Two scored experiments (the six-AI panel test and the 17 Nov bake-off, self-graded) and a rerunnable attack-case kit. |
 
 ## Five inventions
 
 | Invention | Status | What exists |
 |---|---|---|
-| Assurance Flight Recorder | Proposed | A portable evidence format other AI platforms could produce. Idea only; the home recorder is a first step, not a standard. |
+| Assurance Flight Recorder | Offline-tested | Draft format one.flightrecorder/0.1 with a validator, a made-up sample and 9 passing tests. Nothing live produces it yet. |
 | Proof Before Permission | Proposed | An AI attaches evidence that its action meets the rules before asking. Idea only. |
 | Counterfactual Approval Testing | Proposed | Simulate deny, delay, change or approve before deciding. Idea only. |
 | Trust Decay | Proposed | Old test results count for less after code, model or dependency changes. Idea only. |

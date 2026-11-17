@@ -67,12 +67,12 @@
         "id": "sample-gate"
       },
       "request_id": "REQ-1",
-      "summary": "No executor: nothing is carried out",
+      "summary": "Not an allowlisted action: nothing is carried out",
       "policy": null,
       "evidence": null,
       "seq": 4,
       "prev": "514c6df3c40ef6068d124fa08876ce5f1e44de2fd964c12358bb2e6cd2728690",
-      "hash": "b6464e59e2a9ef49465adfb8b4ff0e52035b2d7ad8830d4338db68af95adf898"
+      "hash": "3e7ccc97494d4d703254fa0c3ba2174c6be11248f851b53a359ccce032756988"
     },
     {
       "at": "2026-11-17T12:06:00.000Z",
@@ -88,8 +88,8 @@
         "request_text_sha256": "sample"
       },
       "seq": 5,
-      "prev": "b6464e59e2a9ef49465adfb8b4ff0e52035b2d7ad8830d4338db68af95adf898",
-      "hash": "d0a23e3e3dbd88bf05c4447b9a3581dea6172d8d0210c06d1b34198c27f5a7d6"
+      "prev": "3e7ccc97494d4d703254fa0c3ba2174c6be11248f851b53a359ccce032756988",
+      "hash": "a44cbaeefe76e8a6484d5a06efd7832ccf6f018c40e85abc8f61859526d9e487"
     },
     {
       "at": "2026-11-17T12:07:00.000Z",
@@ -103,8 +103,8 @@
       "policy": null,
       "evidence": null,
       "seq": 6,
-      "prev": "d0a23e3e3dbd88bf05c4447b9a3581dea6172d8d0210c06d1b34198c27f5a7d6",
-      "hash": "adfb7686dc6218e227a4967286853e4be4aeee43d655d60b5f078aa178e15454"
+      "prev": "a44cbaeefe76e8a6484d5a06efd7832ccf6f018c40e85abc8f61859526d9e487",
+      "hash": "a639fb78519f9ee0a24ee9657a13d89d087bd8a037c661eb29967f352c2e9852"
     },
     {
       "at": "2026-11-17T12:09:00.000Z",
@@ -120,8 +120,8 @@
         "passkey_assertion_sha256": "sample-not-a-real-assertion"
       },
       "seq": 7,
-      "prev": "adfb7686dc6218e227a4967286853e4be4aeee43d655d60b5f078aa178e15454",
-      "hash": "37089e1d14fc7697cbe58dd0b1fc9ee071a9f46c4870d043ad43465120ac4e9d"
+      "prev": "a639fb78519f9ee0a24ee9657a13d89d087bd8a037c661eb29967f352c2e9852",
+      "hash": "58e9ca722a4609d7d8a9e54a07540e7162385b3d2b2a34e86a724d44e0ceb493"
     }
   ]
 }

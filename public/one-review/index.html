@@ -275,6 +275,65 @@ h1{letter-spacing:-.035em}
 .cap-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .cap-h b{font-size:15px}
 .cap p{margin:7px 0 0;color:var(--muted);font-size:13.5px;line-height:1.45}
+
+/* ===== phase 2-3 ===== */
+.topbar .wrap{gap:8px}
+.tools{display:flex;gap:6px;flex:none}
+.tbtn{flex:none;min-width:34px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:6px 9px;font-size:12.5px;font-weight:600;min-height:34px;white-space:nowrap}
+.tbtn[aria-pressed="true"]{color:var(--bg);background:var(--warn);border-color:var(--warn)}
+@media(max-width:560px){#reviewerBtn{font-size:0;padding:6px 9px}#reviewerBtn:before{content:"Review";font-size:12.5px}}
+.rbanner{margin:14px 0 0;background:var(--warn-bg);border:1px solid rgba(255,195,90,.4);border-radius:12px;padding:12px 14px;font-size:14.5px}
+body.reviewer .viz,body.reviewer .hero .cta,body.reviewer .bar .fl{display:none}
+body.reviewer .reveal{opacity:1;transform:none}
+.pipe{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px;counter-reset:pp}
+@media(min-width:900px){.pipe{grid-template-columns:repeat(7,1fr)}}
+.pipe li{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;position:relative;counter-increment:pp}
+.pipe li b{display:block;font-family:var(--disp);font-size:16px;margin:8px 0 4px}
+.pipe li b:before{content:counter(pp) ". ";color:var(--dim)}
+.pipe li p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.45}
+.branches{display:grid;gap:8px;margin:12px 0 0}
+@media(min-width:760px){.branches{grid-template-columns:1fr 1fr}}
+.branches div{background:var(--stop-bg);border:1px solid rgba(255,77,94,.3);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--muted)}
+.branches b{display:block;margin-bottom:2px}
+.c-stop{color:var(--stop)} .c-you{color:var(--you)} .c-warn{color:var(--warn)}
+.demo-banner{display:inline-block;font:700 11.5px/1 var(--mono);letter-spacing:.08em;color:#1a1200;background:var(--warn);padding:7px 10px;border-radius:6px;margin:4px 0 6px}
+.cr{display:grid;grid-template-columns:1fr 1fr;gap:10px;position:relative;padding:12px;border:2px dashed rgba(255,195,90,.45);border-radius:16px}
+@media(min-width:760px){.cr{grid-template-columns:repeat(3,1fr)}}
+.cr:after{content:"SAMPLE";position:absolute;right:14px;bottom:8px;font:800 34px/1 var(--disp);color:rgba(255,195,90,.10);pointer-events:none}
+.crt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.crl{font:600 11px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+.crt b{font:700 24px/1.1 var(--disp)}
+.crt small{color:var(--muted);font-size:12.5px}
+.suite{margin-top:12px}
+.suite-h{font-weight:700;margin:0 0 8px}.suite-h.ok{color:var(--you)}.suite-h.no{color:var(--stop)}
+.suite-l{list-style:none;margin:0;padding:0;font:12.5px/1.5 var(--mono);max-height:320px;overflow:auto}
+.suite-l li{padding:4px 0;border-bottom:1px solid var(--line);color:#c9d2e0}
+.suite-l .sm{font-weight:700}.suite-l li.ok .sm{color:var(--you)}.suite-l li.no .sm{color:var(--stop)}
+.verdict.warn{display:block;background:var(--warn-bg);color:var(--warn)}
+.frt{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.fr-row{display:grid;grid-template-columns:auto auto 1fr;gap:8px;align-items:start;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13.5px}
+.fr-row.bad{border-color:var(--stop);background:var(--stop-bg)}
+.fr-n{font:600 12px/1.6 var(--mono);color:var(--dim)}
+.fr-t{font:700 10.5px/1 var(--mono);text-transform:uppercase;padding:5px 6px;border-radius:5px;background:var(--card2);color:var(--muted)}
+.t-approval,.t-resume{color:var(--you);background:var(--you-bg)} .t-stop{color:var(--stop);background:var(--stop-bg)} .t-request{color:var(--ai);background:var(--ai-bg)}
+.fr-b{min-width:0;color:#c9d2e0}.fr-h{display:block;font:11px/1.4 var(--mono);color:var(--dim);word-break:break-all;margin-top:2px}
+.gloss{display:grid;grid-template-columns:1fr;gap:2px 14px;margin:6px 0}
+@media(min-width:640px){.gloss{grid-template-columns:200px 1fr}}
+.gloss dt{font-weight:700;color:var(--fg);margin-top:6px}.gloss dd{margin:0 0 4px;color:var(--muted)}
+/* light mode */
+:root[data-theme="light"]{--bg:#f6f7fa;--bg2:#eef1f6;--card:#ffffff;--card2:#f1f4f9;--line:#d6dce6;--fg:#0f1520;--muted:#4b5668;--dim:#6b7586;--ai:#2456c9;--ai-bg:rgba(36,86,201,.09);--you:#0c8a5b;--you-bg:rgba(12,138,91,.10);--stop:#d01f34;--stop-bg:rgba(208,31,52,.08);--warn:#a86400;--warn-bg:rgba(168,100,0,.10)}
+:root[data-theme="light"] body{background:var(--bg)}
+:root[data-theme="light"] body:after{display:none}
+:root[data-theme="light"] .topbar{background:rgba(246,247,250,.85)}
+:root[data-theme="light"] .sub,:root[data-theme="light"] .ll,:root[data-theme="light"] .doc,:root[data-theme="light"] .devout,:root[data-theme="light"] .dbody,:root[data-theme="light"] .pill,:root[data-theme="light"] .bar .n,:root[data-theme="light"] .fr-b,:root[data-theme="light"] .suite-l li{color:#273041}
+:root[data-theme="light"] .doc,:root[data-theme="light"] .devout{background:#f4f6fa}
+:root[data-theme="light"] .viz{background:#fff}
+:root[data-theme="light"] .viz svg text{fill:#4b5668}
+:root[data-theme="light"] .btn.pri{background:#0f1520;color:#fff}
+:root[data-theme="light"] .ll.you{color:#0c8a5b}:root[data-theme="light"] .ll.stop{color:#b0182b}
+:root[data-theme="light"] .demo-banner{color:#fff}
+:root[data-theme="light"] .act.bad{color:#b0182b}
+:root[data-theme="light"] .approve{color:#fff}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -283,10 +342,12 @@ h1{letter-spacing:-.035em}
 
 <div class="topbar"><div class="wrap">
   <div class="brand"><span class="dot"></span><b>ONE</b><span class="bs"> · UNBOUNDED WHAT</span></div>
-  <nav aria-label="Sections"><a href="#try">Studio</a><a href="#lab">Security lab</a><a href="#evidence">Evidence</a><a href="#research">Research</a><a href="#dev">Developers</a><a href="#gov">Governance</a><a href="#map">Capability map</a></nav>
+  <nav aria-label="Sections"><a href="#try">Studio</a><a href="#how">How it works</a><a href="#lab">Security lab</a><a href="#evidence">Evidence</a><a href="#research">Research</a><a href="#dev">Developers</a><a href="#gov">Governance</a><a href="#map">Capability map</a></nav>
+  <div class="tools"><button class="tbtn" id="reviewerBtn" aria-pressed="false">Reviewer mode</button><button class="tbtn" id="themeBtn" aria-label="Switch to light mode">◐</button></div>
 </div></div>
 
 <main id="main">
+<div class="wrap" id="reviewerBanner" hidden><div class="rbanner"><b>Reviewer mode.</b> Decoration is hidden and every detail is open. Start with: <a href="#claims-h">claim to proof</a> · <a href="#lab">the attack lab and rerun kit</a> · <a href="#frx">the record validator</a> · <a href="#deep">what's broken or missing</a>. Nothing here is independently verified.</div></div>
 <header class="hero wrap">
  <div class="herogrid">
  <div>
@@ -405,6 +466,43 @@ h1{letter-spacing:-.035em}
   </ol>
 </section>
 
+<section id="how" class="wrap reveal">
+  <p class="eyebrow">How it works</p>
+  <h2>One request, start to finish</h2>
+  <p class="lede">Each step is tagged with what exists today. Anything that fails, times out or can't be checked is refused: deny by default.</p>
+  <ol class="pipe">
+    <li><span class="badge2 s-live">Live</span><b>AI asks</b><p>A connected AI files a request with its own key. It gets back only a receipt number.</p></li>
+    <li><span class="badge2 s-proposed">Proposed</span><b>Policy check</b><p>Today every request goes straight to the owner. No automatic rule check sorts them yet.</p></li>
+    <li><span class="badge2 s-live">Live</span><b>Owner decides</b><p>Approve needs the owner's passkey, for that exact request, once. Deny and STOP are always available.</p></li>
+    <li><span class="badge2 s-live">Live</span><b>Sealed record</b><p>The decision is written to a hash-chained record, copied hourly to a home computer.</p></li>
+    <li><span class="badge2 s-self">Self-reported</span><b>60-second wait</b><p>The runner waits 60 seconds before acting, so STOP can still catch it.</p></li>
+    <li><span class="badge2 s-self">Self-reported</span><b>Runner acts</b><p>One allowlisted test action only: add a line to one sandbox file. First run 17 Nov.</p></li>
+    <li><span class="badge2 s-proposed">Proposed</span><b>Proof of what happened</b><p>The runner reports "done". A signed proof of the result, checkable by others, is not built.</p></li>
+  </ol>
+  <div class="branches">
+    <div><b class="c-stop">STOP pressed</b> every waiting request is cancelled; AI calls are refused; lifting it needs the passkey.</div>
+    <div><b class="c-stop">Owner denies or ignores</b> denied requests are recorded; unanswered ones expire after 7 days.</div>
+    <div><b class="c-stop">Something breaks</b> if ONE can't read STOP or write its record, it refuses everything (offline-tested).</div>
+    <div><b class="c-stop">Bad approval</b> wrong key, wrong request, changed wording, reused or expired: refused (try it in the lab).</div>
+  </div>
+  <p class="note">Trust boundaries: the AI apps are outside ONE and untrusted. The owner's phone holds the passkey. ONE's server and the record are run by me, so they are not independent. Whoever controls the hosting account could change ONE's code.</p>
+</section>
+
+<section id="control" class="wrap reveal">
+  <p class="eyebrow">Control Room preview</p>
+  <div class="demo-banner" role="note">PREVIEW — MADE-UP DATA — NOT CONNECTED TO ANYTHING</div>
+  <h2>What the owner's screen is meant to show</h2>
+  <p class="lede">A concept of the owner's control room, filled with invented numbers so it can be shown in public. The real owner app is private.</p>
+  <div class="cr">
+    <div class="crt"><span class="crl">STOP</span><b class="c-you">Off</b><small>sample</small></div>
+    <div class="crt"><span class="crl">Waiting for you</span><b>2</b><small>sample: "Order filter, $40" · "Restart backup"</small></div>
+    <div class="crt"><span class="crl">Record check</span><b class="c-you">Intact</b><small>sample: 412 lines, last sealed 2 min ago</small></div>
+    <div class="crt"><span class="crl">Runner</span><b>Idle</b><small>sample: 1 allowlisted action</small></div>
+    <div class="crt"><span class="crl">AI desks</span><b>5</b><small>sample: 2 asked today, 0 refused</small></div>
+    <div class="crt"><span class="crl">Alerts</span><b class="c-warn">1</b><small>sample: "Health check missed one run"</small></div>
+  </div>
+</section>
+
 <section id="lab" class="wrap reveal">
   <p class="eyebrow">02 · Security Laboratory</p>
   <span class="tag sim">Simulation — no live action · real cryptography, in your browser</span>
@@ -416,14 +514,32 @@ h1{letter-spacing:-.035em}
     <div class="labout" id="labOut" aria-live="polite"></div>
     <div class="acts"><button class="act" id="labReset">Clear and make new keys</button></div>
   </div>
+  <div class="panel suite" id="suite">
+    <div class="ph"><div class="who">Every attack case, in your browser</div><button class="act" id="runAll" style="flex:none">Run every test</button></div>
+    <div id="suiteOut" aria-live="polite"><p class="empty">Runs the 18 cases from the rerun kit right here: spoofing, replay, expiry, STOP, fail-closed and record tampering.</p></div>
+  </div>
   <p class="note" style="max-width:42rem"><b>Rerun it yourself:</b> the <a href="https://github.com/garthyoung45/quest-suite/tree/main/public/one-review/kit">rerun kit</a> has the same rules as 18 attack cases you can run with Node, no account or dependencies, plus a check that deliberately broken gates get caught. It tests a reference model of the rules, not ONE's live code.</p>
 </section>
 
 <section id="evidence" class="wrap reveal">
   <p class="eyebrow">03 · Evidence Observatory</p>
-  <h2>Claim to proof</h2>
+  <h2 id="claims-h">Claim to proof</h2>
   <p class="lede">Every claim this page makes, what backs it, and where it stops. <b>Demonstrated</b> means shown on the real system in the video. <b>Self-reported</b> means it comes from my own logs or records. <b>Offline-tested</b> means tested by me, away from the live system. Nothing here is independently verified.</p>
   <ol class="claims" id="claimsList"></ol>
+  <div class="panel" id="frx" style="margin-top:18px">
+    <div class="ph"><div class="who">Flight recorder explorer</div><span class="badge2 s-offline">Offline-tested draft</span></div>
+    <p class="lede" style="margin:0 0 10px;font-size:15px">A proposed, portable format for one request's whole life, sealed event by event. This sample is made up. Try to fool the validator.</p>
+    <div class="acts">
+      <button class="act" id="frxLoad">Load the sample</button>
+      <button class="act bad" id="frxEdit">Quietly edit an event</button>
+      <button class="act bad" id="frxAi">Make the AI the approver and reseal</button>
+      <button class="act bad" id="frxCut">Cut the last event</button>
+      <button class="act ai" id="frxCheck">Validate</button>
+    </div>
+    <div class="verdict" id="frxVerdict" aria-live="polite"></div>
+    <div class="frt" id="frxTable"></div>
+    <p class="note"><a href="kit/sample_export.json" download>Download the sample export (JSON)</a> · <a href="https://github.com/garthyoung45/quest-suite/blob/main/public/one-review/kit/flight_recorder.mjs">format and validator source</a>. Nothing on the live system produces this format yet.</p>
+  </div>
 </section>
 
 <section id="week" class="wrap reveal">
@@ -542,6 +658,22 @@ h1{letter-spacing:-.035em}
 <section class="wrap" id="deep">
   <h2>Soup to nuts</h2>
   <p class="lede">Everything, for people who want to dig.</p>
+
+  <details><summary>Words used on this page, in plain English</summary><div class="dbody">
+    <dl class="gloss">
+      <dt>AI assistant</dt><dd>A chatbot like ChatGPT or Claude that can be connected to other tools.</dd>
+      <dt>Request</dt><dd>Something an AI asks to do. On its own it does nothing.</dd>
+      <dt>Passkey</dt><dd>A sign-in that lives on the owner's phone and needs their fingerprint. It cannot be typed or guessed.</dd>
+      <dt>Approval</dt><dd>The owner's passkey signature for one exact request. It works once and then runs out.</dd>
+      <dt>STOP</dt><dd>One button that refuses every AI and cancels everything waiting. Only the passkey lifts it. It only covers ONE.</dd>
+      <dt>Runner</dt><dd>A small program that carries out an approved request. Today it can do one test action only.</dd>
+      <dt>Record / ledger</dt><dd>A list of everything that happened. Each line includes a fingerprint (hash) of the line before, so a quiet edit shows up.</dd>
+      <dt>Hash</dt><dd>A short code computed from some text. Change one letter and the code changes completely.</dd>
+      <dt>Fail closed</dt><dd>When something breaks, the safe choice is to refuse, not to let things through.</dd>
+      <dt>Self-reported</dt><dd>It comes from my own logs. Nobody else has checked it.</dd>
+      <dt>Independently verified</dt><dd>Checked by someone outside, with evidence you can trace to them. Nothing here is, yet.</dd>
+    </dl>
+  </div></details>
 
   <details><summary>How one request travels, step by step</summary><div class="dbody">
     <ol class="flow">
@@ -733,5 +865,6 @@ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isInter
 </script>
 <script src="caps.js"></script>
 <script src="lab.js"></script>
+<script type="module" src="studio.mjs"></script>
 </body>
 </html>

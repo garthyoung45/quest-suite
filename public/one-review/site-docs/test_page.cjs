@@ -1,15 +1,15 @@
 const {chromium}=require('playwright');
-const SP='/tmp/claude-0/-home-user/e6a5f9db-9e0a-5989-ab70-045ce1a70716/scratchpad/';
+const SP=process.env.SHOTS||require('os').tmpdir()+'/';
 (async()=>{const b=await chromium.launch();let fails=0;const ok=(c,m)=>{console.log((c?'PASS ':'FAIL ')+m);if(!c)fails++;};
 const ctx=await b.newContext({viewport:{width:390,height:844}});
 const p=await ctx.newPage();const errs=[];const net=[];
 p.on('pageerror',e=>errs.push(e.message));
-p.on('request',r=>{const u=r.url();if(!u.startsWith('file:')&&!u.includes('fonts.g')&&!u.startsWith('data:'))net.push(u)});
-await p.goto('file://'+process.argv[2]);await p.waitForTimeout(1200);
+p.on('request',r=>{const u=r.url();if(!u.startsWith(new URL(process.argv[2]).origin)&&!u.includes('fonts.g')&&!u.startsWith('data:'))net.push(u)});
+await p.goto(process.argv[2]);await p.waitForTimeout(1200);
 ok(errs.length===0,'no JS errors '+errs.join(';'));
 ok(await p.evaluate(()=>document.documentElement.scrollWidth)<=390,'no sideways scroll at 390');
 ok(await p.locator('#capmap .cap').count()===55,'55 capability cards');
-ok(await p.locator('.claim').count()===14,'14 claims');
+ok(await p.locator('.claim').count()===15,'15 claims');
 ok((await p.textContent('#heroCount')).includes('0</b>')||(await p.textContent('#heroCount')).includes('0 independently'),'hero count shows 0 independently verified');
 // filter
 await p.click('.chip[data-f="sim"]');const vis=await p.locator('#capmap .cap:not([hidden])').count();ok(vis>0&&vis<55,'filter sim shows '+vis);await p.click('.chip[data-f="all"]');
@@ -32,7 +32,7 @@ await p.click('#devStop');await p.click('[data-dev="send_request"]');ok((await p
 await p.click('#aAsk');await p.waitForTimeout(500);ok(await p.locator('#queue .req').count()>=1,'original simulator: request appears');
 await p.click('#stop');await p.waitForTimeout(300);ok((await p.textContent('#stopState')).length>0,'original STOP works');
 // keyboard
-await p.goto('file://'+process.argv[2]);await p.waitForTimeout(800);await p.keyboard.press('Tab');ok(await p.evaluate(()=>document.activeElement.className)==='skip','first Tab = skip link');
+await p.goto(process.argv[2]);await p.waitForTimeout(800);await p.keyboard.press('Tab');ok(await p.evaluate(()=>document.activeElement.className)==='skip','first Tab = skip link');
 const tabs=[];for(let i=0;i<40;i++){await p.keyboard.press('Tab');tabs.push(await p.evaluate(()=>{const a=document.activeElement;return a.tagName+(a.id?'#'+a.id:'')}))}
 ok(!tabs.includes('BODY'),'keyboard focus moves through controls');
 ok(net.length===0,'no network calls except fonts: '+net.join(','));
@@ -40,7 +40,26 @@ ok(net.length===0,'no network calls except fonts: '+net.join(','));
 const links=await p.$$eval('a[href^="https://github.com/garthyoung45"]',a=>a.map(x=>x.href));console.log('  github links',links.length);
 await p.screenshot({path:SP+'p_top.png'});
 for (const id of ['lab','evidence','dev','gov','map']){await p.locator('#'+id).scrollIntoViewIfNeeded();await p.evaluate(()=>document.querySelectorAll('.reveal,#boChart').forEach(e=>e.classList.add('in')));await p.waitForTimeout(700);await p.screenshot({path:SP+'p_'+id+'.png'});}
-const d=await b.newPage({viewport:{width:1280,height:900}});await d.goto('file://'+process.argv[2]);await d.waitForTimeout(800);await d.evaluate(()=>document.querySelectorAll('.reveal,#boChart').forEach(e=>e.classList.add('in')));
+const d=await b.newPage({viewport:{width:1280,height:900}});await d.goto(process.argv[2]);await d.waitForTimeout(800);await d.evaluate(()=>document.querySelectorAll('.reveal,#boChart').forEach(e=>e.classList.add('in')));
 for (const id of ['lab','map']){await d.locator('#'+id).scrollIntoViewIfNeeded();await d.waitForTimeout(700);await d.screenshot({path:SP+'d_'+id+'.png'});}
-const s320=await b.newPage({viewport:{width:320,height:700}});await s320.goto('file://'+process.argv[2]);await s320.waitForTimeout(800);ok(await s320.evaluate(()=>document.documentElement.scrollWidth)<=320,'no sideways scroll at 320');
+const s320=await b.newPage({viewport:{width:320,height:700}});await s320.goto(process.argv[2]);await s320.waitForTimeout(800);ok(await s320.evaluate(()=>document.documentElement.scrollWidth)<=320,'no sideways scroll at 320');
+
+// phase 2-3
+await p.goto(process.argv[2]);await p.waitForTimeout(1000);
+await p.click('#runAll');await p.waitForFunction(()=>document.getElementById('suiteOut').textContent.includes('cases behaved'),null,{timeout:20000});
+ok((await p.textContent('#suiteOut')).includes('18 of 18'),'in-browser suite: 18 of 18');
+await p.click('#frxLoad');await p.waitForTimeout(600);ok(await p.locator('.fr-row').count()===7,'recorder: 7 sample events');
+await p.click('#frxCheck');await p.waitForTimeout(300);ok((await p.textContent('#frxVerdict')).includes('Valid'),'recorder: sample valid');
+await p.click('#frxEdit');await p.click('#frxCheck');await p.waitForTimeout(300);ok((await p.textContent('#frxVerdict')).startsWith('✗'),'recorder: edit caught');
+await p.click('#frxLoad');await p.waitForTimeout(400);await p.click('#frxAi');await p.click('#frxCheck');await p.waitForTimeout(300);ok((await p.textContent('#frxVerdict')).includes('only the owner decides'),'recorder: resealed AI approval caught');
+await p.click('#frxLoad');await p.waitForTimeout(400);await p.click('#frxCut');await p.click('#frxCheck');await p.waitForTimeout(300);ok((await p.textContent('#frxVerdict')).includes('Valid'),'recorder: cut-off end NOT caught (stated limit)');
+await p.click('#reviewerBtn');ok(await p.evaluate(()=>document.body.classList.contains('reviewer')&&!document.getElementById('reviewerBanner').hidden&&[...document.querySelectorAll('#deep details')].every(d=>d.open)),'reviewer mode opens details and banner');
+await p.click('#reviewerBtn');
+await p.click('#themeBtn');ok(await p.evaluate(()=>document.documentElement.getAttribute('data-theme')==='light'),'light mode toggles');
+await p.screenshot({path:SP+'p_light.png'});await p.locator('#how').scrollIntoViewIfNeeded();await p.screenshot({path:SP+'p_light_how.png'});
+await p.click('#themeBtn');
+ok((await p.textContent('#control')).includes('MADE-UP DATA'),'control room preview carries made-up-data banner');
+ok(await p.evaluate(()=>document.documentElement.scrollWidth)<=390,'no sideways scroll after phase 2-3');
+ok(errs.length===0,'no JS errors after phase 2-3 '+errs.join(';'));
+ok(net.length===0,'still no outside calls: '+net.join(','));
 console.log('FAILS',fails);await b.close();})();
